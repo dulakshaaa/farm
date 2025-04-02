@@ -15,13 +15,14 @@ $whereClause = '';
 // Check if search parameter is set
 if (isset($_GET['search']) && !empty($_GET['search'])) {
     $search = $conn->real_escape_string($_GET['search']);
-    $whereClause = " WHERE v.VISBATCODE LIKE '%$search%' OR f.FLONAME LIKE '%$search%'";
+    $whereClause = " WHERE b.batcode LIKE '%$search%' OR f.FLONAME LIKE '%$search%'";
 }
 
 // Fetch visit records with search
 $visits = [];
-$visitQuery = "SELECT v.*, b.BATDDT, f.FLONAME FROM visitmast v 
-               JOIN batmast b ON v.VISBATCODE = b.BATCODE
+$visitQuery = "SELECT v.*, b.BATCODE, b.BATDDT, f.FLONAME 
+               FROM visitmast v 
+               JOIN batmast b ON v.VITBATSNO = b.BATSNO
                JOIN flomast f ON v.VISFIELDOFF = f.FLOSNO"
                . $whereClause .
                " ORDER BY v.VISDDT DESC";
@@ -31,6 +32,7 @@ if ($visitResult) {
         $visits[] = $row;
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -156,7 +158,7 @@ if ($visitResult) {
                     <?php foreach ($visits as $visit): ?>
                         <tr>
                         <td><?php echo htmlspecialchars($visit['VISSNO']); ?></td>
-                            <td><?php echo htmlspecialchars($visit['VISBATCODE']); ?></td>
+                            <td><?php echo htmlspecialchars($visit['BATCODE']); ?></td>
                             <td><?php echo htmlspecialchars($visit['VISDDT']); ?></td>
                             <td><?php echo htmlspecialchars($visit['FLONAME']); ?></td>
                             <td><?php echo htmlspecialchars($visit['VISMORTALITY']); ?></td>
@@ -173,8 +175,8 @@ if ($visitResult) {
                             <td><?php echo htmlspecialchars($visit['VISINPFEEDBAG']); ?></td>
                             <td><?php echo htmlspecialchars($visit['VISFEEDCONSUMED']); ?></td>
                             <td class="action-buttons">
-                                <a href="editvisit.php?id=<?php echo $visit['VISBATCODE']; ?>" class="btn btn-update">Edit</a>
-                                <a href="deletevisit.php?id=<?php echo $visit['VISBATCODE']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
+                                <a href="editvisit.php?id=<?php echo $visit['BATCODE']; ?>" class="btn btn-update">Edit</a>
+                                <a href="deletevisit.php?id=<?php echo $visit['BATCODE']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>

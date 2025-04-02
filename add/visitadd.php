@@ -20,7 +20,7 @@ if ($farmerResult) {
 
 // Fetch batches for dropdown (will be filtered by farmer)
 $batches = [];
-$batchQuery = "SELECT b.BATCODE, b.BATDDT, b.BATCHICKS, b.BATFARSNO, f.FARFLOSNO 
+$batchQuery = "SELECT b.BATCODE, b.BATSNO, b.BATDDT, b.BATCHICKS, b.BATFARSNO, f.FARFLOSNO 
                FROM batmast b 
                JOIN farma f ON b.BATFARSNO = f.FARSNO
                WHERE b.BATACTFLG = 1
@@ -30,9 +30,10 @@ if ($batchResult) {
     while ($row = $batchResult->fetch_assoc()) {
         $batches[$row['BATFARSNO']][] = [
             'code' => $row['BATCODE'],
+            'sno' => $row['BATSNO'],
             'date' => $row['BATDDT'],
             'chicks' => $row['BATCHICKS'],
-            'flosno' => $row['FARFLOSNO'] // Include field officer ID from farma
+            'flosno' => $row['FARFLOSNO'] 
         ];
     }
 }
@@ -61,15 +62,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $visinpfeedbag = $_POST['VISINPFEEDBAG'];
     $visfeedconsumed = $_POST['VISFEEDCONSUMED'];
 
-    // Get batch details for calculations
-    $batchQuery = "SELECT BATDDT, BATCHICKS FROM batmast WHERE BATCODE = ?";
+    // Get BATSNO from BATCODE
+    $batchQuery = "SELECT BATSNO, BATDDT, BATCHICKS FROM batmast WHERE BATCODE = ?";
     $stmt = $conn->prepare($batchQuery);
-    $stmt->bind_param("i", $visbatcode);
+    $stmt->bind_param("s", $visbatcode);
     $stmt->execute();
     $batchResult = $stmt->get_result();
     $batchDetails = $batchResult->fetch_assoc();
     $stmt->close();
 
+    if (!$batchDetails) {
+        echo "<script>
+                alert('Error: The provided batch code does not exist.');
+                window.location.href = 'your_previous_page.php';
+              </script>";
+        exit;
+    }
+
+    $visbatsno = $batchDetails['BATSNO'];
     $batchDate = new DateTime($batchDetails['BATDDT']);
     $visitDate = new DateTime($visddt);
     $interval = $batchDate->diff($visitDate);
@@ -86,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Insert data using prepared statement
     $sql = "INSERT INTO visitmast (
-                VISBATCODE, VISFIELDOFF, VISDDT, VISAGE, VISMORTALITY, VISMOTPCN, 
+                VITBATSNO, VISFIELDOFF, VISDDT, VISAGE, VISMORTALITY, VISMOTPCN, 
                 VISBLNBIRD, VISAVGWGT, VISAVGFEED, VISFCR, VISCGCON, 
                 VISINPFEEDBAG, VISFEEDCONSUMED, VISFEEDBAL, VISADDUSER, VISADDIP
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -94,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt = $conn->prepare($sql);
     $stmt->bind_param(
         "iisididddddsidds",
-        $visbatcode,
+        $visbatsno,
         $visfieldoff,
         $visddt,
         $visage,
@@ -125,6 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

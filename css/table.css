@@ -1,0 +1,30 @@
+.chick-stats-table {
+    width: 100%;
+    border-collapse: separate; /* Allows border-radius to work */
+    border-spacing: 0; /* Prevents unwanted gaps */
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Add border to each cell */
+.chick-stats-table td {
+    padding: 5px;
+    border: 1px solid #f4f4f4; /* Thicker border for visibility */
+    text-align: left;
+}
+
+/* Round only the table itself */
+.chick-stats-table tr:first-child td:first-child {
+    border-top-left-radius: 10px;
+}
+.chick-stats-table tr:first-child td:last-child {
+    border-top-right-radius: 10px;
+}
+.chick-stats-table tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+.chick-stats-table tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}

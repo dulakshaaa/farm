@@ -1,5 +1,13 @@
 <?php
 require_once '../includes/connect.php';
+require_login();  // This will redirect to login if not authenticated
+
+// 2. Get current user data if needed
+$user_id = $_SESSION['user_id'];
+$user_query = $conn->query("SELECT * FROM usemast WHERE USRSNO = $user_id");
+$current_user = $user_query->fetch_assoc();
+include '../includes/areanav.php';
+
 
 // Start session
 
@@ -394,9 +402,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 <body>
     <div class="container">
         <h1>Batch Report</h1>
-        <?php if ($current_user): ?>
-            <div class="user-info">Logged in as: <?php echo htmlspecialchars($current_user); ?></div>
-        <?php endif; ?>
+        
 
         <!-- Filter Form -->
         <form class="filter-form" method="GET" id="filter-form">

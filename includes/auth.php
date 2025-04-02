@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     // If login fails
     $_SESSION['login_error'] = "Invalid username or password";
-    header("Location: login.php");
+    header("Location:./includes/login.php");
     exit();
 }
 ?>

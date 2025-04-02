@@ -1,6 +1,6 @@
 <?php
 require 'connect.php';
-require_login();  // This will redirect to login if not authenticated
+ // This will redirect to login if not authenticated
 
 // Get current user data if needed
 $user_id = $_SESSION['user_id'];
@@ -290,7 +290,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </form>
             
             <div class="login-link">
-                Already have an account? <a href="login.php">Login here</a>
+                Already have an account? <a href="./login.php">Login here</a>
             </div>
         </div>
     </div>
