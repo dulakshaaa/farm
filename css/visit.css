@@ -1,0 +1,179 @@
+/* visit-compact.css - Ultra Compact Table with Borders */
+:root {
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --primary-dark: #4338ca;
+    --secondary: #10b981;
+    --secondary-dark: #0d9488;
+    --danger: #ef4444;
+    --dark-1: #0f172a;
+    --dark-2: #1e293b;
+    --dark-3: #334155;
+    --light-1: #f8fafc;
+    --light-2: #e2e8f0;
+    --light-3: #94a3b8;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --transition: all 0.15s ease;
+}
+
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--dark-1);
+    color: var(--light-1);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.3;
+    padding: 0;
+}
+
+/* Ultra Compact Container */
+.container {
+    background-color: var(--dark-2);
+    padding: 0.75rem;
+    width: 100%;
+    margin: 0;
+}
+
+/* Compact Header */
+h1 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--primary);
+}
+
+/* Minimal Search */
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.search-container input {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+    background-color: var(--dark-3);
+    border: 1px solid var(--border-color);
+    color: var(--light-1);
+    border-radius: 0.25rem;
+}
+
+.search-container button {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.search-container button:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Ultra Compact Table with Borders */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.75rem;
+    table-layout: auto;
+    border: 1px solid var(--border-color);
+}
+
+thead th {
+    padding: 0.5rem;
+    font-size: 0.7rem;
+    background-color: var(--dark-3);
+    position: sticky;
+    top: 0;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+tbody td {
+    padding: 0.4rem 0.5rem;
+    border: 1px solid var(--border-color);
+    color: var(--light-2);
+}
+
+/* Micro Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.btn {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
+    min-width: 50px;
+    border: none;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-update {
+    background-color: var(--secondary);
+    color: white;
+}
+
+.btn-update:hover {
+    background-color: var(--secondary-dark);
+}
+
+.btn-delete {
+    background-color: var(--danger);
+    color: white;
+}
+
+.btn-delete:hover {
+    background-color: #dc2626;
+}
+
+/* No Records Message */
+.no-records {
+    text-align: center;
+    padding: 1rem;
+    color: var(--light-3);
+    font-size: 0.85rem;
+}
+
+/* Responsive Tweaks */
+@media (max-width: 768px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    table {
+        font-size: 0.7rem;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    thead th, 
+    tbody td {
+        padding: 0.35rem 0.4rem;
+    }
+    
+    .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.65rem;
+    }
+}
+
+/* Hover Effects */
+tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.03);
+}

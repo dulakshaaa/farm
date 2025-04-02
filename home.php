@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriPro | Farm Management System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./css/home.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">AP</div>
+                <div class="app-name">AgriPro</div>
+            </div>
+            <nav class="nav-menu">
+                <!-- Existing Options -->
+                <a href="#" class="nav-item active">
+                    <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
+                    <div class="nav-label">Dashboard</div>
+                </a>
+                <a href="./view/batches.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-boxes"></i></div>
+                    <div class="nav-label">Batches</div>
+                    <!-- Image Suggestion: Poultry chicks in a brooder -->
+                </a>
+                <a href="./view/breeds.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-dna"></i></div>
+                    <div class="nav-label">Breeds</div>
+                    <!-- Image Suggestion: Different chicken breed comparison -->
+                </a>
+                <a href="./view/farms.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-tractor"></i></div>
+                    <div class="nav-label">Farms</div>
+                    <!-- Image Suggestion: Aerial view of poultry farm -->
+                </a>
+                <a href="./view/fieldoff.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-user-shield"></i></div>
+                    <div class="nav-label">Field Officers</div>
+                    <!-- Image Suggestion: Agriculture officer inspecting chickens -->
+                </a>
+                <a href="./view/area.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="nav-label">Areas</div>
+                    <!-- Image Suggestion: Map with farm locations -->
+                </a>
+
+                <!-- New Additional Options -->
+                <a href="./view/feed.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-utensils"></i></div>
+                    <div class="nav-label">Visit Management</div>
+                    <!-- Image Suggestion: Poultry feed in bags or feeding system -->
+                </a>
+                <a href="./view/health.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-heartbeat"></i></div>
+                    <div class="nav-label">Health Records</div>
+                    <!-- Image Suggestion: Veterinarian checking chickens -->
+                </a>
+                <a href="./view/production.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-chart-pie"></i></div>
+                    <div class="nav-label">Production</div>
+                    <!-- Image Suggestion: Eggs collection or growth chart -->
+                </a>
+                <a href="./view/inventory.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="nav-label">Inventory</div>
+                    <!-- Image Suggestion: Farm equipment and supplies -->
+                </a>
+                <a href="./view/reports.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="nav-label">Reports</div>
+                    <!-- Image Suggestion: Analytics dashboard or report document -->
+                </a>
+
+                <!-- Settings at bottom -->
+                <a href="#" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-cog"></i></div>
+                    <div class="nav-label">Settings</div>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navigation Bar -->
+            <header class="top-nav">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search farms, batches, reports...">
+                </div>
+                <!-- Modify your user-menu div in the top-nav to include a logout option -->
+                <!-- Replace your existing user-menu div with this -->
+<div class="user-menu">
+    <div class="notification-bell">
+        <i class="fas fa-bell"></i>
+        <div class="notification-badge">3</div>
+    </div>
+    <div class="user-profile">
+        <div class="user-avatar">JD</div>
+        <div class="user-details">
+            <div class="user-name">John Doe</div>
+            <div class="user-role">Administrator</div>
+        </div>
+        <i class="fas fa-chevron-down dropdown-arrow"></i>
+        
+        <div class="user-dropdown">
+            <a href="./profile.php" class="dropdown-item">
+                <i class="fas fa-user"></i> My Profile
+            </a>
+            <a href="./includes/register.php" class="dropdown-item">
+                <i class="fas fa-cog"></i> Register User
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="./includes/logout.php" class="dropdown-item logout-item">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </div>
+</div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Farm Dashboard</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Add Farm
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Total Farms</div>
+                            <div class="stat-icon" style="background-color: rgba(79, 70, 229, 0.1); color: var(--primary);">
+                                <i class="fas fa-warehouse"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">24</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 12% from last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Active Batches</div>
+                            <div class="stat-icon" style="background-color: rgba(16, 185, 129, 0.1); color: var(--success);">
+                                <i class="fas fa-egg"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">156</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 8% from last week
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Avg. Yield Rate</div>
+                            <div class="stat-icon" style="background-color: rgba(245, 158, 11, 0.1); color: var(--accent);">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">92.5%</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i> 1.2% from last month
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-title">Workers Active</div>
+                            <div class="stat-icon" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger);">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">48</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i> 3 new today
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Production Trends</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-secondary" style="padding: 0.5rem;">Weekly</button>
+                                <button class="btn btn-secondary" style="padding: 0.5rem;">Monthly</button>
+                                <button class="btn btn-secondary" style="padding: 0.5rem;">Yearly</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">Production Chart (Would be replaced with Chart.js or similar)</div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Farm Distribution</h3>
+                            <div class="chart-actions">
+                                <button class="btn btn-secondary" style="padding: 0.5rem;">View All</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <div class="chart-placeholder">Pie Chart (Would be replaced with Chart.js or similar)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-card">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Recent Activity</h3>
+                        <button class="btn btn-secondary" style="padding: 0.5rem 1rem;">View All</button>
+                    </div>
+                    <div class="activity-list">
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-egg"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-description">New batch created at Farm #12</div>
+                                <div class="activity-time">10 minutes ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-description">Feed delivery completed for Farm #8</div>
+                                <div class="activity-time">1 hour ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-description">New worker added to the system</div>
+                                <div class="activity-time">3 hours ago</div>
+                            </div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-description">Monthly report generated</div>
+                                <div class="activity-time">Yesterday</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="action-title">Add New Farm</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-egg"></i>
+                        </div>
+                        <div class="action-title">Create Batch</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="action-title">Generate Report</div>
+                    </div>
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <div class="action-title">Set Reminder</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- In a real implementation, you would include charting libraries like Chart.js -->
+    <script>
+        // This would be replaced with actual chart initialization
+        console.log("Charts would be initialized here with Chart.js or similar library");
+
+        // Sample animation for demonstration
+        document.querySelectorAll('.stat-card').forEach((card, index) => {
+            card.style.animationDelay = `${0.1 * index}s`;
+        });
+    </script>
+</body>
+
+</html>
