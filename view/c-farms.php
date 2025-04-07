@@ -214,6 +214,7 @@ $result = $conn->query($sql);
                 }
             });
         });
+        
     </script>
 
     <?php

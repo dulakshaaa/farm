@@ -1,6 +1,7 @@
 <?php
 include '../includes/connect.php';  // Include database connection
 require_login();  // This will redirect to login if not authenticated
+require_role('admin');
 
 // 2. Get current user data if needed
 $user_id = $_SESSION['user_id'];
@@ -23,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $areaname = $_POST['AREANAME'];
     $areacode = $_POST['AREACODE'];
-    $adduser = 'Admin'; // Or get from session: $_SESSION['username']
+    $adduser = $_SESSION['username'] ?? 'unknown_user'; // Or get from session: $_SESSION['username']
     $addip = gethostbyname(gethostname());
 
     // Check if area code already exists using prepared statement

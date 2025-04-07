@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     $batactflg = ($_POST['batactflg'] === '1') ? '1' : '0'; // Set '1' for Active, '0' for Inactive
 
     // Get the user's information
-    session_start();
+    
     $user = $_SESSION['username'] ?? 'unknown_user';  // Replace with actual user info
 
     // Get the user's IP address

@@ -1,6 +1,7 @@
 <?php 
 include '../includes/connect.php';  // Include database connection
 require_login();  // This will redirect to login if not authenticated
+require_role('admin');
 
 // 2. Get current user data if needed
 $user_id = $_SESSION['user_id'];
@@ -13,8 +14,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Use prepared statements to prevent SQL injection
     $brdname = $_POST['BRDNAME'];     
     $brdcode = $_POST['BRDCODE'];     
-    $brdadduser = 'Admin'; 
+    $brdadduser = $_SESSION['username'] ?? 'unknown_user';
     $brdaddip = gethostbyname(gethostname());  
+   
 
     // Check for existing breed code using prepared statement
     $checkSql = "SELECT * FROM breedmast WHERE BRDCODE = ?";

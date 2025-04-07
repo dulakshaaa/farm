@@ -1,6 +1,7 @@
 <?php
 include '../includes/connect.php';  // Include database connection
 require_login();  // This will redirect to login if not authenticated
+require_role('admin');
 
 // 2. Get current user data if needed
 $user_id = $_SESSION['user_id'];
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $flocode = $_POST['FLOCODE'];
     $flotel = $_POST['FLOTEL'];
     $floareasno = $_POST['FLOAREASNO'];
-    $floadduser = 'Admin';
+    $floadduser = $_SESSION['username'] ?? 'unknown_user';
     $floaddip = gethostbyname(gethostname());
 
     // Check if officer code already exists using prepared statement

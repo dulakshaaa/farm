@@ -1,20 +1,14 @@
 <?php
-require 'connect.php';
-
-// Redirect if already logged in
-if (is_logged_in()) {
-    header("Location:../home.php");
-    exit();
-}
+require 'connect.php'; // This already starts the session
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = $conn->real_escape_string($_POST['email'] ?? '');
+    $usercode = $conn->real_escape_string($_POST['usercode'] ?? '');
     $password = $_POST['password'] ?? '';
     
-    if (!empty($email) && !empty($password)) {
-        $sql = "SELECT USRSNO, USRNAME, USRPASSWORD FROM usemast 
-                WHERE USREMAIL = '$email' AND USRACTFLG = 1";
+    if (!empty($usercode) && !empty($password)) {
+        $sql = "SELECT USRSNO, USRNAME, USRPASSWORD, USREMAIL, usrtype FROM usemast 
+                WHERE USRCODE = '$usercode' AND USRACTFLG = 1";
         $result = $conn->query($sql);
         
         if ($result->num_rows == 1) {
@@ -24,19 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Set session variables
                 $_SESSION['user_id'] = $user['USRSNO'];
                 $_SESSION['username'] = $user['USRNAME'];
-                $_SESSION['email'] = $email;
+                $_SESSION['usercode'] = $usercode;
+                $_SESSION['email'] = $user['USREMAIL'];
+                $_SESSION['role'] = $user['usrtype']; // Store role in session
                 
-                // Redirect to intended page or dashboard
-                header("Location: " . ($_SESSION['redirect_url'] ?? '../home.php'));
+                // Redirect based on role
+                if ($user['usrtype'] == 'admin') {
+                    header("Location:../home.php"); // Redirect admin to home.php
+                } else {
+                    header("Location: ../c-home.php"); // Redirect user to home2.php
+                }
                 exit();
             } else {
-                $error = "Invalid email or password";
+                $error = "Invalid user code or password";
             }
         } else {
-            $error = "Invalid email or password";
+            $error = "Invalid user code or password";
         }
     } else {
-        $error = "Please enter both email and password";
+        $error = "Please enter both user code and password";
     }
 }
 ?>
@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <?php endif; ?>
         <form method="POST" class="login-form">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
+                <label for="usercode">User Code</label>
+                <input type="text" id="usercode" name="usercode" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>

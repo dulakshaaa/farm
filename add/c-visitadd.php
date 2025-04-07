@@ -294,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .form-group {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -461,7 +461,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     });
 
     // Calculate when these fields change
-    $('#VISDDT, #VISMORTALITY, #VISAVGWGT, #VISINPFEEDBAG, #VISFEEDBAL').on('change keyup', calculateFields);
+    $('#VISDDT, #VISMORTALITY, #VISAVGWGT, #VISINPFEEDBAG, #VISFEEDCONSUMED').on('change keyup', calculateFields);
 
     // Initialize field officers dropdown
     $('#VISFIELDOFF').empty().append('<option value="">-- Select Field Officer --</option>');

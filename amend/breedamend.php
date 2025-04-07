@@ -22,12 +22,19 @@ if ($brdsno) {
     $stmt->close();
 }
 
+
 // Process form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     $brdsno = $_POST['brdsno'];
     $brdname = trim($_POST['brdname']);
     $brdcode = trim($_POST['brdcode']);
     $brdstatus = $_POST['brdstatus']; // Get the selected status value
+    $user = $_SESSION['username'] ?? 'unknown_user';
+    $user_ip = $_SERVER['REMOTE_ADDR'];
+
+    // Get the current date and time
+    $current_date = date('Y-m-d');
+    $current_time = date('H:i:s');
     
     // Validate inputs
     if (empty($brdname) || empty($brdcode)) {
@@ -36,10 +43,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
         $stmt = $conn->prepare("UPDATE BREEDMAST SET 
                               BRDNAME = ?, 
                               BRDCODE = ?, 
-                              BRDACTFLG = ?
+                              BRDACTFLG = ?,
+                              BRDAMDDUSER = ?, 
+                              BRDAMDDIP =?, 
+                              BRDAMDDT = ?, 
+                              BRDAMDTIME = ? 
                               WHERE BRDSNO = ?");
 
-        $stmt->bind_param("ssii", $brdname, $brdcode, $brdstatus, $brdsno);
+        $stmt->bind_param("ssissssi", $brdname, $brdcode, $brdstatus, $user, $user_ip, $current_date, $current_time, $brdsno);
 
         if ($stmt->execute()) {
             $message = "<div class='success'>Breed record updated successfully!</div>";
@@ -50,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                                     b.BRDNAME,
                                     b.BRDCODE,
                                     b.BRDACTFLG
+                                    
                                   FROM BREEDMAST b
                                   WHERE b.BRDSNO = ?");
             $stmt->bind_param("i", $brdsno);

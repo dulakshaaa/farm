@@ -3,10 +3,11 @@
 
 // Include database connection
 include('./includes/connect.php'); // Ensure this file contains the database connection
+require_role('admin');
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ./login.php"); // Redirect to login page if user is not logged in
+    header("Location: ./includes/login.php"); // Redirect to login page if user is not logged in
     exit();
 }
 
@@ -66,45 +67,63 @@ $resultInactiveBatches = mysqli_query($conn, $queryInactiveBatches);
 $dataInactiveBatches = mysqli_fetch_assoc($resultInactiveBatches);
 $inactiveBatches = $dataInactiveBatches['inactive_batches'];
 
-
-// Calculate total number of chicks and categorize by age range
-$queryChicks = "SELECT SUM(BATCHICKS) AS total_chicks, BATDDT FROM batmast GROUP BY BATDDT";
-$resultChicks = mysqli_query($conn, $queryChicks);
-
-// Initialize variables for chicks in different age ranges
-$totalChicks = 0;
+// Initialize age category counters
 $chicks_1_7_days = 0;
 $chicks_8_14_days = 0;
 $chicks_15_21_days = 0;
 $chicks_22_28_days = 0;
 $chicks_29_days_and_above = 0;
+$totalChicks = 0;
 
-// Get the current date
+// Current date
 $currentDate = date('Y-m-d');
 
-// Loop through each batch and categorize the chicks based on the age
-while ($row = mysqli_fetch_assoc($resultChicks)) {
-    $batchChicks = $row['total_chicks'];
-    $batchDate = $row['BATDDT'];
+// SQL to get BATCHICKS, total mortality for each batch, and batch start date
+$query = "
+    SELECT 
+        b.BATSNO,
+        b.BATDDT,
+        b.BATCHICKS,
+        IFNULL(SUM(v.VISMORTALITY), 0) AS total_mortality
+    FROM batmast b
+    LEFT JOIN visitmast v ON v.VITBATSNO = b.BATSNO AND v.VISDDT <= '$currentDate'
+    WHERE b.BATACTFLG = 1
+    GROUP BY b.BATSNO
+";
 
-    // Calculate the difference in days between the batch date and the current date
-    $dateDiff = (strtotime($currentDate) - strtotime($batchDate)) / (60 * 60 * 24); // Difference in days
+$result = mysqli_query($conn, $query);
 
-    // Categorize chicks based on age range
-    if ($dateDiff >= 1 && $dateDiff <= 7) {
-        $chicks_1_7_days += $batchChicks;
-    } elseif ($dateDiff >= 8 && $dateDiff <= 14) {
-        $chicks_8_14_days += $batchChicks;
-    } elseif ($dateDiff >= 15 && $dateDiff <= 21) {
-        $chicks_15_21_days += $batchChicks;
-    } elseif ($dateDiff >= 22 && $dateDiff <= 28) {
-        $chicks_22_28_days += $batchChicks;
-    } elseif ($dateDiff >= 29) {
-        $chicks_29_days_and_above += $batchChicks;
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $batchChicks = $row['BATCHICKS'];
+        $mortality = $row['total_mortality'];
+        $batchDate = $row['BATDDT'];
+
+        // Calculate remaining birds
+        $balanceBirds = $batchChicks - $mortality;
+        if ($balanceBirds < 0) $balanceBirds = 0; // Just in case
+
+        // Calculate age
+        $ageInDays = (strtotime($currentDate) - strtotime($batchDate)) / (60 * 60 * 24);
+
+        // Categorize by age
+        if ($ageInDays >= 1 && $ageInDays <= 7) {
+            $chicks_1_7_days += $balanceBirds;
+        } elseif ($ageInDays >= 8 && $ageInDays <= 14) {
+            $chicks_8_14_days += $balanceBirds;
+        } elseif ($ageInDays >= 15 && $ageInDays <= 21) {
+            $chicks_15_21_days += $balanceBirds;
+        } elseif ($ageInDays >= 22 && $ageInDays <= 28) {
+            $chicks_22_28_days += $balanceBirds;
+        } elseif ($ageInDays >= 29) {
+            $chicks_29_days_and_above += $balanceBirds;
+        }
+
+        $totalChicks += $balanceBirds;
     }
 
-    // Accumulate total chicks
-    $totalChicks += $batchChicks;
+} else {
+    echo "Error: " . mysqli_error($conn);
 }
 
 // Close database connection
@@ -246,7 +265,7 @@ mysqli_close($conn);
                         <button class="btn btn-secondary">
                             <i class="fas fa-download"></i> Export
                         </button>
-                        <button class="btn btn-primary">
+                        <button class="btn btn-primary" onclick="window.location.href='./add/visitadd.php'">
                             <i class="fas fa-plus"></i> Add visit
                         </button>
                     </div>
@@ -493,6 +512,34 @@ mysqli_close($conn);
         document.querySelectorAll('.stat-card').forEach((card, index) => {
             card.style.animationDelay = `${0.1 * index}s`;
         });
+        document.addEventListener('DOMContentLoaded', function() {
+  const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+  const sidebar = document.querySelector('.sidebar');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+  
+  // Toggle sidebar
+  mobileMenuBtn.addEventListener('click', function() {
+    sidebar.classList.toggle('active');
+    sidebarOverlay.classList.toggle('active');
+  });
+  
+  // Close sidebar when clicking overlay
+  sidebarOverlay.addEventListener('click', function() {
+    sidebar.classList.remove('active');
+    sidebarOverlay.classList.remove('active');
+  });
+  
+  // Close sidebar when clicking a nav item (optional)
+  const navItems = document.querySelectorAll('.nav-item');
+  navItems.forEach(item => {
+    item.addEventListener('click', function() {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+      }
+    });
+  });
+});
     </script>
 </body>
 

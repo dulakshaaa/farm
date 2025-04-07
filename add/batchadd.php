@@ -1,6 +1,7 @@
 <?php
 include '../includes/connect.php';
 require_login();  // This will redirect to login if not authenticated
+require_role('admin');
 
 // 2. Get current user data if needed
 $user_id = $_SESSION['user_id'];
@@ -20,9 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $batchicks = $_POST['BATCHICKS'];
     $bataddip = $_SERVER['REMOTE_ADDR'];
     $batlocation = $_POST['BATLOCATION'];
+    $adduser = $_SESSION['username'] ?? 'unknown_user';
 
-    $stmt = $conn->prepare("INSERT INTO batmast (BATCODE, BATFARSNO, BATDDT, BATBREEDSNO, BATCHICKS, BATADDIP, BATLOCATION) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssiss", $batcode, $batfarsno, $batddt, $batbreedsno, $batchicks, $bataddip, $batlocation);
+    $stmt = $conn->prepare("INSERT INTO batmast (BATCODE, BATFARSNO, BATDDT, BATBREEDSNO, BATCHICKS, BATADDIP, BATLOCATION,BATADDUSER) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssisss", $batcode, $batfarsno, $batddt, $batbreedsno, $batchicks, $bataddip, $batlocation, $adduser);
     
     if ($stmt->execute()) {
         $success = "Batch saved successfully!";

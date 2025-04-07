@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     $areaname = trim($_POST['areaname']);
     $areacode = trim($_POST['areacode']);
     $status = $_POST['status']; // Get the selected status value
+    $user = $_SESSION['username'] ?? 'unknown_user';
+    $user_ip = $_SERVER['REMOTE_ADDR'];
     
     // Validate inputs
     if (empty($areaname) || empty($areacode)) {
@@ -36,10 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
         $stmt = $conn->prepare("UPDATE areamast SET 
                               AREANAME = ?, 
                               AREACODE = ?, 
-                              AREAACTFLG = ?
+                              AREAACTFLG = ?,
+                              AREAAMDDUSER = ?,
+                              AREAAMDDIP =?
+
                               WHERE AREASNO = ?");
 
-        $stmt->bind_param("ssii", $areaname, $areacode, $status, $areasno);
+        $stmt->bind_param("ssissi", $areaname, $areacode, $status, $user, $user_ip, $areasno);
 
         if ($stmt->execute()) {
             $message = "<div class='success'>Area record updated successfully!</div>";
