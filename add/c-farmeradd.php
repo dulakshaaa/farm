@@ -19,7 +19,8 @@ if ($assigned_flosno && $user_role !== 'admin') {
     }
 }
 
-include '../includes/farmnavbar.php';
+include '../includes/c-farmernavbar.php';
+$area = $conn->query("SELECT AREASNO,AREANAME FROM areamast ORDER BY AREANAME")->fetch_all(MYSQLI_ASSOC);
 
 //--------------------------------------------Add Data----------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -30,6 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $faradduser = $_SESSION['username'] ?? 'unknown_user';
     $faraddip = gethostbyname(gethostname());
     $fieldOfficerId = $_POST['FIELD_OFFICER_ID']; // From hidden input
+    $areaId = $_POST['areasno'];
 
     // Handle FARPHOTO
     $farphoto = '';
@@ -54,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         echo "<script>alert('Error: Farm code already taken.');</script>";
     } else {
-        $sql = "INSERT INTO FARMA (FARNAME, FARCODE, FARADDRESS, FARTEL, FARPHOTO, FARADDUSER, FARADDIP, FARFLOSNO) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO FARMA (FARNAME, FARCODE, FARADDRESS, FARTEL, FARPHOTO, FARADDUSER, FARADDIP, FARFLOSNO, FARAREASNO) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssi", $farname, $farcode, $faraddress, $fartel, $farphoto, $faradduser, $faraddip, $fieldOfficerId);
+        $stmt->bind_param("sssssssiI", $farname, $farcode, $faraddress, $fartel, $farphoto, $faradduser, $faraddip, $fieldOfficerId, $areaId);
 
         if ($stmt->execute()) {
             echo "<script>alert('New farm added successfully'); window.location.href = window.location.href;</script>";
@@ -197,6 +199,17 @@ $conn->close();
                 <label for="FARADDRESS">Farm Address</label>
                 <textarea id="FARADDRESS" name="FARADDRESS" required></textarea>
             </div>
+            <div class="form-group">
+                <label for="areasno">Breed</label>
+                <select id="areasno" name="areasno" required>
+                    <option value="">Select Area</option>
+                    <?php foreach ($area as $area): ?>
+                        <option value="<?= htmlspecialchars($area['AREASNO']) ?>">
+                            <?= htmlspecialchars($area['AREANAME']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
 
             <div class="form-group">
                 <label for="FARTEL">Farm Telephone</label>
@@ -207,6 +220,7 @@ $conn->close();
                 <label for="FARPHOTO">Farm Photo</label>
                 <input type="file" id="FARPHOTO" name="FARPHOTO" accept="image/*">
             </div>
+
 
             <div class="form-group">
                 <label for="FIELD_OFFICER_NAME">Field Officer</label>

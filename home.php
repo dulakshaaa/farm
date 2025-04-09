@@ -148,8 +148,8 @@ mysqli_close($conn);
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">AP</div>
-                <div class="app-name">AgriPro</div>
+                <div class="logo">FV</div>
+                <div class="app-name">Field Visit</div>
             </div>
             <nav class="nav-menu">
                 <!-- Existing Options -->

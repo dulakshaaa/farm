@@ -1,6 +1,7 @@
 <?php
 require_once '../includes/connect.php';
 require_login();  // This will redirect to login if not authenticated
+include '../includes/c-visitnavbar.php';
 
 // Get current user data
 $user_id = $_SESSION['user_id'];
@@ -8,7 +9,7 @@ $user_query = $conn->prepare("SELECT * FROM usemast WHERE USRSNO = ?");
 $user_query->bind_param("i", $user_id);
 $user_query->execute();
 $current_user = $user_query->get_result()->fetch_assoc();
-include '../includes/fieldoffnavbar.php';
+
 
 // Fetch farmers for dropdown
 $farmers = [];
@@ -40,6 +41,9 @@ if ($batchResult) {
     }
 }
 
+
+
+
 // Fetch all field officers for dropdown
 $fieldOfficers = [];
 $officerQuery = "SELECT FLOSNO, FLONAME FROM flomast WHERE FLOACTFLG = 1 ORDER BY FLONAME";
@@ -61,11 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $visavgwgt = filter_input(INPUT_POST, 'VISAVGWGT', FILTER_VALIDATE_FLOAT);
     $visinpfeedbag = filter_input(INPUT_POST, 'VISINPFEEDBAG', FILTER_VALIDATE_FLOAT);
     $visfeedbal = filter_input(INPUT_POST, 'VISFEEDBAL', FILTER_VALIDATE_FLOAT);
+    
 
     // Validate required fields
-    if (!$visfarsno || !$visbatcode || !$visfieldoff || !$visddt || 
-        $vismortality === false || $visavgwgt === false || 
-        $visinpfeedbag === false || $visfeedbal === false) {
+    if (
+        !$visfarsno || !$visbatcode || !$visfieldoff || !$visddt ||
+        $vismortality === false || $visavgwgt === false ||
+        $visinpfeedbag === false || $visfeedbal === false
+    ) {
         echo "<script>
                 alert('Please fill all required fields with valid data');
                 window.history.back();
@@ -91,12 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $visbatsno = $batchDetails['BATSNO'];
-    
+
     // Calculate age in days
     try {
         $batchDate = new DateTime($batchDetails['BATDDT']);
         $visitDate = new DateTime($visddt);
-        
+
         // Ensure visit date is not before batch date
         if ($visitDate < $batchDate) {
             echo "<script>
@@ -105,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                   </script>";
             exit;
         }
-        
+
         $interval = $batchDate->diff($visitDate);
         $visage = $interval->days;
     } catch (Exception $e) {
@@ -120,14 +127,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $vismotpcn = ($vismortality / $batchDetails['BATCHICKS']) * 100;
     $visblnbird = $batchDetails['BATCHICKS'] - $vismortality;
 
-    
+
     // Calculate feed balance
     $visfeedconsumed = $visinpfeedbag - $visfeedbal;
-        
+
     // Calculate FCR (Feed Conversion Ratio)
     $total_weight = $visavgwgt * $visblnbird; // Total weight in kg
     $total_feed_consumed_kg = $visfeedconsumed * 50; // Convert bags to kg (assuming 1 bag = 50kg)
     $visfcr = ($total_weight > 0) ? ($total_feed_consumed_kg / $total_weight) : 0;
+    $visavgfeed = $visfeedconsumed / $visblnbird; // Average feed per bird
 
     // Set user and IP information
     $visadduser = $current_user['USRNAME'];
@@ -137,9 +145,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Insert data using prepared statement
     $sql = "INSERT INTO visitmast (
                 VISFARSNO, VITBATSNO, VISFIELDOFF, VISDDT, VISAGE, VISMORTALITY, VISMOTPCN, 
-                VISBLNBIRD, VISAVGWGT, VISFCR,
+                VISBLNBIRD, VISAVGWGT, VISAVGFEED, VISFCR,
                 VISINPFEEDBAG, VISFEEDCONSUMED, VISFEEDBAL, VISADDUSER, VISADDIP, VISUSRSNO
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -151,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $stmt->bind_param(
-        "iiisididddddsssi",  // now 17 characters
+        "iiisididdddddsssi",  // now 17 characters
         $visfarsno,
         $visbatsno,
         $visfieldoff,
@@ -161,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $vismotpcn,
         $visblnbird,
         $visavgwgt,
+        $visavgfeed,
         $visfcr,
         $visinpfeedbag,
         $visfeedconsumed,
@@ -169,12 +178,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $visaddip,
         $visusrsno
     );
-    
+
 
     if ($stmt->execute()) {
         echo "<script>
                 alert('Visit record added successfully');
-                window.location.href = '../view/visitview.php';
+                window.location.href = '../c-home.php';
               </script>";
     } else {
         echo "<script>
@@ -184,10 +193,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $stmt->close();
 }
+// Fetch farmers for dropdown with area information
+$farmers = [];
+$farmerQuery = "SELECT f.FARSNO, f.FARNAME, f.FARAREASNO, a.AREANAME 
+                FROM farma f 
+                LEFT JOIN areamast a ON f.FARAREASNO = a.AREASNO 
+                WHERE f.FARACTFLG = 1 
+                ORDER BY f.FARNAME";
+$farmerResult = $conn->query($farmerQuery);
+if ($farmerResult) {
+    while ($row = $farmerResult->fetch_assoc()) {
+        $farmers[$row['FARSNO']] = [
+            'name' => $row['FARNAME'],
+            'area_sno' => $row['FARAREASNO'],
+            'area_name' => $row['AREANAME'] ?? 'No Area Assigned'
+        ];
+    }
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,7 +298,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             background-color: #4CAF50;
             color: white;
         }
-    </style> <style>
+    </style>
+    <style>
         h1 {
             color: #2c3e50;
             font-family: 'Montserrat', sans-serif;
@@ -294,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .form-group label {
@@ -349,130 +377,138 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             color: white;
         }
     </style>
-    
+
     <script>
         $(document).ready(function() {
-    // Initialize data from PHP
-    const farmers = <?php echo json_encode($farmers); ?>;
-    const batchesByFarmer = <?php echo json_encode($batches); ?>;
-    const allFieldOfficers = <?php echo json_encode($fieldOfficers); ?>;
+            // Initialize data from PHP
+            const farmers = <?php echo json_encode($farmers); ?>;
+            const batchesByFarmer = <?php echo json_encode($batches); ?>;
+            const allFieldOfficers = <?php echo json_encode($fieldOfficers); ?>;
 
-    // Function to populate batches dropdown based on selected farmer
-    function updateBatchesDropdown() {
-        const farmerId = $('#FARMER_ID').val();
-        $('#VISBATCODE').empty().append('<option value="">-- Select Batch --</option>');
-        
-        if (farmerId && batchesByFarmer[farmerId]) {
-            batchesByFarmer[farmerId].forEach(function(batch) {
-                $('#VISBATCODE').append(
-                    `<option value="${batch.code}" 
-                     data-flosno="${batch.flosno}"
-                     data-chicks="${batch.chicks}"
-                     data-date="${batch.date}">
-                     ${batch.code} (${batch.date})
-                     </option>`
-                );
-            });
-        }
-        $('#VISBATCODE').prop('disabled', !farmerId);
-    }
+            // Function to populate batches dropdown based on selected farmer
+            function updateBatchesDropdown() {
+                const farmerId = $('#FARMER_ID').val();
+                $('#VISBATCODE').empty().append('<option value="">-- Select Batch --</option>');
 
-    // Function to set field officer based on selected batch
-    function setFieldOfficer() {
-        const selectedBatch = $('#VISBATCODE option:selected');
-        const flosno = selectedBatch.data('flosno');
-        
-        if (flosno && allFieldOfficers[flosno]) {
-            $('#VISFIELDOFF').val(flosno).trigger('change');
-        }
-    }
-
-    function calculateFields() {
-        const farmerId = $('#FARMER_ID').val();
-        const batchCode = $('#VISBATCODE').val();
-        const visitDate = $('#VISDDT').val();
-        const mortality = parseFloat($('#VISMORTALITY').val()) || 0;
-        const avgWgt = parseFloat($('#VISAVGWGT').val()) || 0;
-        const inpFeedBag = parseFloat($('#VISINPFEEDBAG').val()) || 0;
-        const feedBal = parseFloat($('#VISFEEDBAL').val()) || 0;
-
-        // Calculate Feed Balance (bags)
-        const feedConsumed = inpFeedBag - feedBal;
-        $('#VISFEEDCONSUMED').val(feedConsumed.toFixed(2));
-
-        // Calculate age if we have batch and visit date
-        if (batchCode && visitDate) {
-            const selectedBatch = $('#VISBATCODE option:selected');
-            const batchDateStr = selectedBatch.data('date');
-            const totalChicks = parseFloat(selectedBatch.data('chicks')) || 0;
-            
-            try {
-                const batchDate = new Date(batchDateStr);
-                const visitDateObj = new Date(visitDate);
-                
-                if (visitDateObj < batchDate) {
-                    alert('Visit date cannot be before batch date');
-                    $('#VISDDT').val('');
-                    return;
+                if (farmerId && batchesByFarmer[farmerId]) {
+                    batchesByFarmer[farmerId].forEach(function(batch) {
+                        $('#VISBATCODE').append(
+                            `<option value="${batch.code}" 
+                         data-flosno="${batch.flosno}"
+                         data-chicks="${batch.chicks}"
+                         data-date="${batch.date}">
+                         ${batch.code} (${batch.date})
+                         </option>`
+                        );
+                    });
                 }
-                
-                const diffTime = visitDateObj - batchDate;
-                const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                $('#VISAGE').val(diffDays);
-
-                // Calculate mortality percentage
-                if (totalChicks > 0) {
-                    const motPcn = (mortality / totalChicks) * 100;
-                    $('#VISMOTPCN').val(motPcn.toFixed(2));
-                }
-
-                // Calculate Balance Birds
-                const balanceBirds = totalChicks - mortality;
-                $('#VISBLNBIRD').val(balanceBirds);
-            } catch (e) {
-                console.error('Date calculation error:', e);
+                $('#VISBATCODE').prop('disabled', !farmerId);
             }
-        }
 
-        // Calculate FCR (Feed Conversion Ratio)
-        // FCR = Total Feed Consumed (kg) / Total Weight Gain (kg)
-        // Assuming feedConsumed is in bags (1 bag = 50kg) and avgWgt is per bird
-        const balanceBirds = parseFloat($('#VISBLNBIRD').val()) || 0;
-        const totalFeedKg = feedConsumed * 50; // Convert bags to kg
-        const totalWeight = avgWgt * balanceBirds;
-        
-        if (totalWeight > 0) {
-            const fcr = (totalFeedKg / totalWeight);
-            $('#VISFCR').val(fcr.toFixed(2));
-        } else {
-            $('#VISFCR').val('0.00');
-        }
-    }
+            // Function to set field officer based on selected batch
+            function setFieldOfficer() {
+                const selectedBatch = $('#VISBATCODE option:selected');
+                const flosno = selectedBatch.data('flosno');
+                if (flosno && allFieldOfficers[flosno]) {
+                    $('#VISFIELDOFF').val(flosno).trigger('change');
+                }
+            }
 
-    // Attach event listeners
-    $('#FARMER_ID').on('change', function() {
-        updateBatchesDropdown();
-        calculateFields();
-    });
+            // Function to update area field based on selected farmer
+            function updateAreaField() {
+                const farmerId = $('#FARMER_ID').val();
+                if (farmerId && farmers[farmerId]) {
+                    $('#VISAREA').val(farmers[farmerId].area_name);
+                } else {
+                    $('#VISAREA').val('No Area Assigned');
+                }
+            }
 
-    $('#VISBATCODE').on('change', function() {
-        setFieldOfficer();
-        calculateFields();
-    });
+            function calculateFields() {
+                const farmerId = $('#FARMER_ID').val();
+                const batchCode = $('#VISBATCODE').val();
+                const visitDate = $('#VISDDT').val();
+                const mortality = parseFloat($('#VISMORTALITY').val()) || 0;
+                const avgWgt = parseFloat($('#VISAVGWGT').val()) || 0;
+                const inpFeedBag = parseFloat($('#VISINPFEEDBAG').val()) || 0;
+                const feedBal = parseFloat($('#VISFEEDBAL').val()) || 0;
+                const birdbal = parseFloat($('#VISBLNBIRD').val()) || 0;
 
-    // Calculate when these fields change
-    $('#VISDDT, #VISMORTALITY, #VISAVGWGT, #VISINPFEEDBAG, #VISFEEDCONSUMED').on('change keyup', calculateFields);
+                const feedConsumed = inpFeedBag - feedBal;
+                $('#VISFEEDCONSUMED').val(feedConsumed.toFixed(2));
 
-    // Initialize field officers dropdown
-    $('#VISFIELDOFF').empty().append('<option value="">-- Select Field Officer --</option>');
-    $.each(allFieldOfficers, function(id, name) {
-        $('#VISFIELDOFF').append(`<option value="${id}">${name}</option>`);
-    });
+                if (batchCode && visitDate) {
+                    const selectedBatch = $('#VISBATCODE option:selected');
+                    const batchDateStr = selectedBatch.data('date');
+                    const totalChicks = parseFloat(selectedBatch.data('chicks')) || 0;
 
-    // Initial setup
-    updateBatchesDropdown();
-});
+                    try {
+                        const batchDate = new Date(batchDateStr);
+                        const visitDateObj = new Date(visitDate);
+
+                        if (visitDateObj < batchDate) {
+                            alert('Visit date cannot be before batch date');
+                            $('#VISDDT').val('');
+                            return;
+                        }
+
+                        const diffTime = visitDateObj - batchDate;
+                        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        $('#VISAGE').val(diffDays);
+
+                        if (totalChicks > 0) {
+                            const motPcn = (mortality / totalChicks) * 100;
+                            $('#VISMOTPCN').val(motPcn.toFixed(2));
+                        }
+
+                        const balanceBirds = totalChicks - mortality;
+                        $('#VISBLNBIRD').val(balanceBirds);
+                    } catch (e) {
+                        console.error('Date calculation error:', e);
+                    }
+                }
+
+                const balanceBirds = parseFloat($('#VISBLNBIRD').val()) || 0;
+                const totalFeedKg = feedConsumed * 50;
+                const totalWeight = avgWgt * balanceBirds;
+                const avgFeed = feedConsumed / balanceBirds;
+                $('#VISAVGFEED').val(avgFeed.toFixed(2));
+
+                if (totalWeight > 0) {
+                    const fcr = (totalFeedKg / totalWeight);
+                    $('#VISFCR').val(fcr.toFixed(2));
+                } else {
+                    $('#VISFCR').val('0.00');
+                }
+               
+
+            }
+
+            // Attach event listeners
+            $('#FARMER_ID').on('change', function() {
+                updateBatchesDropdown();
+                updateAreaField(); // Update area field when farmer changes
+                calculateFields();
+            });
+
+            $('#VISBATCODE').on('change', function() {
+                setFieldOfficer();
+                calculateFields();
+            });
+
+            $('#VISDDT, #VISMORTALITY, #VISAVGWGT, #VISINPFEEDBAG, #VISFEEDBAL').on('change keyup', calculateFields);
+
+            $('#VISFIELDOFF').empty().append('<option value="">-- Select Field Officer --</option>');
+            $.each(allFieldOfficers, function(id, name) {
+                $('#VISFIELDOFF').append(`<option value="${id}">${name}</option>`);
+            });
+
+            // Initial setup
+            updateBatchesDropdown();
+            updateAreaField(); // Set initial area
+        });
     </script>
+
 </head>
 
 <body>
@@ -487,10 +523,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <label for="FARMER_ID">Farmer Name *</label>
                             <select id="FARMER_ID" name="FARMER_ID" required>
                                 <option value="">-- Select Farmer --</option>
-                                <?php foreach ($farmers as $id => $name): ?>
-                                    <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($name); ?></option>
+                                <?php foreach ($farmers as $id => $farmer): ?>
+                                    <option value="<?php echo $id; ?>"><?php echo htmlspecialchars($farmer['name']); ?></option>
                                 <?php endforeach; ?>
                             </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="VISAREA">Farmer Area</label>
+                            <input type="text" id="VISAREA" name="VISAREA" readonly class="calculated-field">
                         </div>
                     </div>
 
@@ -511,6 +554,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             </select>
                         </div>
                     </div>
+
 
                     <div class="form-row">
                         <div class="form-group">
@@ -548,7 +592,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         </div>
                     </div>
 
-                    
+
 
                     <div class="form-row">
                         <div class="form-group">
@@ -566,11 +610,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <label for="VISFEEDCONSUMED">Feed Consumed (bags)</label>
                             <input type="number" id="VISFEEDCONSUMED" name="VISFEEDCONSUMED" step="0.01" readonly class="calculated-field">
                         </div>
+
                         <div class="form-group">
                             <label for="VISFCR">Feed Conversion Ratio (FCR)</label>
                             <input type="number" id="VISFCR" name="VISFCR" step="0.01" readonly class="calculated-field">
                         </div>
                     </div>
+                    <div class="form-group">
+                            <label for="VISAVGFEED">Average Feed</label>
+                            <input type="number" id="VISAVGFEED" name="VISAVGFEED" step="0.01" readonly class="calculated-field">
+                        </div>
                 </div>
             </div>
 
@@ -581,4 +630,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </body>
+
 </html>

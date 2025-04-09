@@ -27,7 +27,8 @@ $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $records_per_page;
 
 // Filter parameters with sanitization
-function sanitizeInput($conn, $input) {
+function sanitizeInput($conn, $input)
+{
     return $conn->real_escape_string(trim($input));
 }
 
@@ -42,9 +43,21 @@ $sort_by = isset($_GET['sort_by']) ? sanitizeInput($conn, $_GET['sort_by']) : 'v
 $sort_order = isset($_GET['sort_order']) && $_GET['sort_order'] == 'ASC' ? 'ASC' : 'DESC';
 
 // Validate sort_by to prevent SQL injection
-$allowed_sort_columns = ['v.VISDDT', 'fa.FARNAME', 'b.BATCODE', 'f.FLONAME', 'v.VISAGE', 
-                        'b.BATCHICKS', 'v.VISMORTALITY', 'v.VISBLNBIRD', 'v.VISFEEDCONSUMED',
-                        'v.VISFEEDBAL', 'v.VISAVGWGT', 'v.VISFCR', 'br.BRDNAME'];
+$allowed_sort_columns = [
+    'v.VISDDT',
+    'fa.FARNAME',
+    'b.BATCODE',
+    'f.FLONAME',
+    'v.VISAGE',
+    'b.BATCHICKS',
+    'v.VISMORTALITY',
+    'v.VISBLNBIRD',
+    'v.VISFEEDCONSUMED',
+    'v.VISFEEDBAL',
+    'v.VISAVGWGT',
+    'v.VISFCR',
+    'br.BRDNAME'
+];
 if (!in_array($sort_by, $allowed_sort_columns)) {
     $sort_by = 'v.VISDDT';
 }
@@ -86,6 +99,9 @@ $sql = "SELECT
             b.BATCODE AS batch_CODE,
             u.USRNAME AS user_name,
             br.BRDNAME AS breed_name,
+            a.AREANAME AS area_name,
+            
+
             DATEDIFF(v.VISDDT, b.BATDDT) AS age_days
         FROM visitmast v
         LEFT JOIN flomast f ON v.VISFIELDOFF = f.FLOSNO
@@ -93,6 +109,7 @@ $sql = "SELECT
         LEFT JOIN batmast b ON v.VITBATSNO = b.BATSNO
         LEFT JOIN breedmast br ON b.BATBREEDSNO = br.BRDSNO
         LEFT JOIN usemast u ON v.VISUSRSNO = u.USRSNO
+        LEFT JOIN areamast a ON a.AREASNO = fa.FARAREASNO
         WHERE $where
         ORDER BY $sort_by $sort_order
         LIMIT $offset, $records_per_page";
@@ -111,15 +128,26 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     header('Content-Type: text/csv');
     header('Content-Disposition: attachment; filename="visits_report.csv"');
     $output = fopen('php://output', 'w');
-    
+
     // Header row
     fputcsv($output, [
-        'Visit Date', 'Farmer Name', 'Batch Code', 'Field Officer', 
-        'Batch Start Date', 'Age (Days)', 'Initial Birds', 'Mortality', 
-        'Bird Balance', 'Feed Consumed', 'Feed Balance', 'Avg Weight', 
-        'FCR', 'Breed Name'
+        'Visit Date',
+        'Farmer Name',
+        'Batch Code',
+        'Field Officer',
+        'Batch Start Date',
+        'Age (Days)',
+        'Initial Birds',
+        'Mortality',
+        'Bird Balance',
+        'Feed Consumed',
+        'Feed Balance',
+        'Avg Weight',
+        'area name',
+        'FCR',
+        'Breed Name'
     ]);
-    
+
     // Data rows
     $export_sql = str_replace("LIMIT $offset, $records_per_page", "", $sql);
     $export_result = mysqli_query($conn, $export_sql);
@@ -137,6 +165,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             $row['VISFEEDCONSUMED'],
             $row['VISFEEDBAL'],
             $row['VISAVGWGT'],
+            $row['area_name'],
             $row['VISFCR'],
             $row['breed_name']
         ]);
@@ -151,6 +180,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -165,108 +195,109 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
     <style>
         :root {
-    --primary: #4f46e5;
-    --primary-light: #6366f1;
-    --primary-dark: #4338ca;
-    --accent: #ff5722;
-    --accent-light: #ff7043;
-    --dark-1: #0f172a;
-    --dark-2: #1e293b;
-    --dark-3: #334155;
-    --light-1: #f8fafc;
-    --light-2: #e2e8f0;
-    --light-3: #94a3b8;
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
-    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --radius-sm: 0.25rem;
-    --radius: 0.5rem;
-}
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #4338ca;
+            --accent: #ff5722;
+            --accent-light: #ff7043;
+            --dark-1: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --light-1: #f8fafc;
+            --light-2: #e2e8f0;
+            --light-3: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-sm: 0.25rem;
+            --radius: 0.5rem;
+        }
 
-.stat-card {
-    background-color: var(--dark-2);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
-    transition: var(--transition);
-    border-left: 4px solid var(--accent);
-}
+        .stat-card {
+            background-color: var(--dark-2);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            border-left: 4px solid var(--accent);
+        }
 
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-lg);
-    border-left-color: var(--accent-light);
-    background-color: var(--dark-3);
-}
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-left-color: var(--accent-light);
+            background-color: var(--dark-3);
+        }
 
-.stat-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    color: var(--accent);
-    font-weight: 600;
-    letter-spacing: 0.5px;
-}
+        .stat-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--accent);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 
-.stat-card p {
-    font-size: 0.9375rem;
-    margin: 0.5rem 0;
-    color: var(--light-2);
-}
+        .stat-card p {
+            font-size: 0.9375rem;
+            margin: 0.5rem 0;
+            color: var(--light-2);
+        }
 
-.stat-card p strong {
-    color: var(--accent-light);
-    font-weight: 500;
-}
+        .stat-card p strong {
+            color: var(--accent-light);
+            font-weight: 500;
+        }
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-.visit-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'Inter', sans-serif;
-    margin-top: 1.5rem;
-    background-color: var(--dark-2);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-}
+        .visit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', sans-serif;
+            margin-top: 1.5rem;
+            background-color: var(--dark-2);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
 
-.visit-table th, 
-.visit-table td {
-    font-size: smaller;
-    padding: 3px 8px;
-    border: 1px solid var(--dark-3);
-    text-align: left;
-    color: var(--light-2);
-}
+        .visit-table th,
+        .visit-table td {
+            font-size: 10px;
+            padding: 3px 6px;
+            border: 1px solid var(--dark-3);
+            text-align: left;
+            color: var(--light-2);
+        }
 
-.visit-table th {
-    background-color: var(--dark-3);
-    color: var(--light-1);
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8125rem;
-    letter-spacing: 0.5px;
-}
+        .visit-table th {
+            background-color: var(--dark-3);
+            color: var(--light-1);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
 
-.visit-table tbody tr {
-    transition: var(--transition);
-}
+        .visit-table tbody tr {
+            transition: var(--transition);
+        }
 
-.visit-table tbody tr:hover {
-    background-color: var(--dark-3);
-}
+        .visit-table tbody tr:hover {
+            background-color: var(--dark-3);
+        }
 
-.visit-table tbody tr:nth-child(even) {
-    background-color: rgba(255, 87, 34, 0.05);
-}
-.filter-form {
+        .visit-table tbody tr:nth-child(even) {
+            background-color: rgba(255, 87, 34, 0.05);
+        }
+
+        .filter-form {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
@@ -276,7 +307,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             border-radius: var(--radius-sm);
         }
 
-        .filter-form input, .filter-form select {
+        .filter-form input,
+        .filter-form select {
             padding: 0.75rem;
             border: 1px solid var(--light-3);
             border-radius: var(--radius-sm);
@@ -286,7 +318,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             transition: var(--transition);
         }
 
-        .filter-form input:focus, .filter-form select:focus {
+        .filter-form input:focus,
+        .filter-form select:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 2px var(--primary-light);
@@ -303,23 +336,31 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         }
 
         .filter-form button:hover {
-    background-color: var(--secondary-dark);
-    transform: translateY(-2px);
-}
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
 
-@media (max-width: 768px) {
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .visit-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-}
-.status-active { color: var(--success); font-weight: 600; }
-        .status-inactive { color: var(--danger); font-weight: 600; }
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .visit-table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        .status-active {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            color: var(--danger);
+            font-weight: 600;
+        }
 
         .pagination {
             display: flex;
@@ -353,6 +394,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             text-align: center;
             padding: 1rem;
         }
+
         table {
             width: 100%;
             border-collapse: separate;
@@ -361,13 +403,16 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow-sm);
+            font-size: 0.7rem;
+            /* smaller text */
         }
 
         thead th {
             background-color: var(--dark-3);
             color: var(--light-1);
-            font-weight: 600;
-            padding: 1rem;
+            font-weight: 200;
+            padding: 0.2rem 0.4rem;
+            /* reduced padding */
             text-align: left;
             border-bottom: 2px solid var(--primary-dark);
             position: sticky;
@@ -380,7 +425,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.01rem;
+            /* smaller gap */
         }
 
         thead th a:hover {
@@ -388,7 +434,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         }
 
         tbody td {
-            padding: 1rem;
+            padding: 0.4rem 0.2rem;
+            /* reduced padding */
             color: var(--light-2);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
@@ -399,11 +446,20 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
         tbody tr:hover {
             background-color: var(--dark-3);
-            transform: translateY(-2px);
+            transform: translateY(-1px);
+            /* subtle hover lift */
         }
 
-        .status-active { color: var(--success); font-weight: 600; }
-        .status-inactive { color: var(--danger); font-weight: 600; }
+
+        .status-active {
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .status-inactive {
+            color: var(--danger);
+            font-weight: 600;
+        }
 
         .pagination {
             display: flex;
@@ -448,11 +504,13 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
             .filter-form {
                 grid-template-columns: 1fr;
             }
+
             table {
                 display: block;
                 overflow-x: auto;
                 white-space: nowrap;
             }
+
             .actions {
                 flex-direction: column;
                 align-items: flex-end;
@@ -464,25 +522,32 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                 display: flex;
                 flex-direction: column;
             }
+
             thead {
                 display: none;
             }
-            tbody, tr, td {
+
+            tbody,
+            tr,
+            td {
                 display: block;
                 width: 100%;
             }
+
             tbody tr {
                 margin-bottom: 1rem;
                 padding: 0.5rem;
                 background: var(--dark-3);
                 border-radius: var(--radius-sm);
             }
+
             tbody td {
-                padding: 0.5rem;
+                padding: 0px;
                 border-bottom: none;
                 position: relative;
                 padding-left: 50%;
             }
+
             tbody td:before {
                 content: attr(data-label);
                 position: absolute;
@@ -494,16 +559,15 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                 white-space: nowrap;
             }
         }
-
     </style>
 
 </head>
 
 
 <body>
-    
+
     <div class="app-container">
-        
+
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -517,7 +581,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                     <div class="nav-label">Dashboard</div>
                 </a>
 
-                <a href="./view/c-farms.php" class="nav-item">
+                <a href="./add/c-farmeradd.php" class="nav-item">
                     <div class="nav-icon"><i class="fas fa-tractor"></i></div>
                     <div class="nav-label">Farmers</div>
                     <!-- Image Suggestion: Aerial view of poultry farm -->
@@ -525,7 +589,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
 
 
-               
+
 
                 <!-- Settings at bottom -->
                 <a href="#" class="nav-item">
@@ -579,13 +643,13 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                 <div class="dashboard-header">
                     <h1 class="dashboard-title">User Visit Dashboard</h1>
                     <div class="dashboard-actions">
-                    <button class="btn btn-primary" onclick="window.location.href='./add/c-visitadd.php'">
+                        <button class="btn btn-primary" onclick="window.location.href='./add/c-visitadd.php'">
                             <i class="fas fa-plus"></i> Add visit
                         </button>
                         <button class="btn btn-secondary" onclick="window.location.href='?<?php echo http_build_query(array_merge($_GET, ['export' => 'csv'])); ?>'">
                             <i class="fas fa-download"></i> Export CSV
                         </button>
-                        
+
                         <button class="btn btn-secondary" id="export-pdf">
                             <i class="fas fa-file-pdf"></i> Export PDF
                         </button>
@@ -595,7 +659,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                 <!-- Filter Form -->
                 <form class="filter-form" method="GET" id="filter-form">
                     <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search visits...">
-                    
+
                     <select name="farm">
                         <option value="">All Farms</option>
                         <?php while ($farm = mysqli_fetch_assoc($farm_options)): ?>
@@ -604,7 +668,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             </option>
                         <?php endwhile; ?>
                     </select>
-                    
+
                     <select name="breed">
                         <option value="">All Breeds</option>
                         <?php while ($breed = mysqli_fetch_assoc($breed_options)): ?>
@@ -613,7 +677,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             </option>
                         <?php endwhile; ?>
                     </select>
-                    
+
                     <select name="batch">
                         <option value="">All Batches</option>
                         <?php while ($batch = mysqli_fetch_assoc($batch_options)): ?>
@@ -622,7 +686,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             </option>
                         <?php endwhile; ?>
                     </select>
-                    
+
                     <select name="officer">
                         <option value="">All Officers</option>
                         <?php while ($officer = mysqli_fetch_assoc($officer_options)): ?>
@@ -631,10 +695,10 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             </option>
                         <?php endwhile; ?>
                     </select>
-                    
+
                     <input type="date" name="date_from" value="<?php echo htmlspecialchars($date_from); ?>" placeholder="From Date">
                     <input type="date" name="date_to" value="<?php echo htmlspecialchars($date_to); ?>" placeholder="To Date">
-                    
+
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-filter"></i> Filter
                     </button>
@@ -650,50 +714,63 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             <thead>
                                 <tr>
                                     <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISDDT', 'sort_order' => $sort_by == 'v.VISDDT' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Visit Date <?php echo $sort_by == 'v.VISDDT' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'fa.FARNAME', 'sort_order' => $sort_by == 'fa.FARNAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Farmer <?php echo $sort_by == 'fa.FARNAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
+                                            Visit Date <?php echo $sort_by == 'v.VISDDT' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
                                     <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'b.BATCODE', 'sort_order' => $sort_by == 'b.BATCODE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Batch <?php echo $sort_by == 'b.BATCODE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
+                                            Batch <?php echo $sort_by == 'b.BATCODE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
+                                        <th>Breed</th>
+                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'fa.FARNAME', 'sort_order' => $sort_by == 'fa.FARNAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Farmer <?php echo $sort_by == 'fa.FARNAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
+                                    <th>Area</th>
+
                                     <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'f.FLONAME', 'sort_order' => $sort_by == 'f.FLONAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Officer <?php echo $sort_by == 'f.FLONAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
+                                            Officer <?php echo $sort_by == 'f.FLONAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
                                     <th>Batch Date</th>
                                     <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISAGE', 'sort_order' => $sort_by == 'v.VISAGE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Age <?php echo $sort_by == 'v.VISAGE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
+                                            Age <?php echo $sort_by == 'v.VISAGE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
                                     <th>Initial Birds</th>
                                     <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISMORTALITY', 'sort_order' => $sort_by == 'v.VISMORTALITY' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                        Mortality <?php echo $sort_by == 'v.VISMORTALITY' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
-                                    </a></th>
+                                            Mortality <?php echo $sort_by == 'v.VISMORTALITY' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                        </a></th>
+                                    <th>Motality %</th>
+
+
                                     <th>Bird Balance</th>
                                     <th>Feed Consumed</th>
                                     <th>Feed Balance</th>
+                                    <th>Avg feed</th>
                                     <th>Avg Weight</th>
                                     <th>FCR</th>
-                                    <th>Breed</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($visits as $visit): ?>
                                     <tr>
                                         <td><?= htmlspecialchars($visit['VISDDT']) ?></td>
-                                        <td><?= htmlspecialchars($visit['farm_name']) ?></td>
                                         <td><?= htmlspecialchars($visit['batch_CODE']) ?></td>
+                                        <td><?= htmlspecialchars($visit['breed_name']) ?></td>
+                                        <td><?= htmlspecialchars($visit['farm_name']) ?></td>
+                                        <td><?= htmlspecialchars($visit['area_name']) ?></td>
                                         <td><?= htmlspecialchars($visit['field_officer_name']) ?></td>
                                         <td><?= htmlspecialchars($visit['batch_date']) ?></td>
                                         <td><?= htmlspecialchars($visit['age_days']) ?></td>
                                         <td><?= number_format($visit['initial_birds']) ?></td>
                                         <td><?= number_format($visit['VISMORTALITY']) ?></td>
+                                        <td><?= number_format($visit['VISMOTPCN']) ?></td>
+                                        
+
                                         <td><?= number_format($visit['VISBLNBIRD']) ?></td>
                                         <td><?= number_format($visit['VISFEEDCONSUMED'], 2) ?></td>
                                         <td><?= number_format($visit['VISFEEDBAL'], 2) ?></td>
+                                        <td><?= number_format($visit['VISAVGFEED'], 2) ?></td>
                                         <td><?= number_format($visit['VISAVGWGT'], 2) ?></td>
                                         <td><?= number_format($visit['VISFCR'], 2) ?></td>
-                                        <td><?= htmlspecialchars($visit['breed_name']) ?></td>
+                                       
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -705,13 +782,13 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                         <?php if ($page > 1): ?>
                             <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page - 1])); ?>">« Prev</a>
                         <?php endif; ?>
-                        
+
                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                             <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
-                        
+
                         <?php if ($page < $total_pages): ?>
                             <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $page + 1])); ?>">Next »</a>
                         <?php endif; ?>
@@ -727,7 +804,9 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         $(document).ready(function() {
             // PDF Export
             $('#export-pdf').on('click', function() {
-                const { jsPDF } = window.jspdf;
+                const {
+                    jsPDF
+                } = window.jspdf;
                 const doc = new jsPDF({
                     orientation: 'landscape',
                     unit: 'pt',
@@ -758,7 +837,11 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                     alternateRowStyles: {
                         fillColor: [240, 240, 240]
                     },
-                    margin: { top: 60, left: 40, bottom: 40 }
+                    margin: {
+                        top: 60,
+                        left: 40,
+                        bottom: 40
+                    }
                 });
 
                 // Save the PDF
@@ -786,4 +869,5 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         });
     </script>
 </body>
+
 </html>
