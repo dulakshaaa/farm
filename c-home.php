@@ -63,7 +63,7 @@ if (!in_array($sort_by, $allowed_sort_columns)) {
 }
 
 // Build the WHERE clause dynamically
-$where_clauses = ["v.VISADDUSER = '$username'"]; // Only show visits for current user
+$where_clauses = ["f.floname = '$username'"]; // Only show visits for current user
 if ($farm_filter) $where_clauses[] = "v.VISFARSNO = '$farm_filter'";
 if ($breed_filter) $where_clauses[] = "b.BATBREEDSNO = '$breed_filter'";
 if ($batch_filter) $where_clauses[] = "v.VITBATSNO = '$batch_filter'";
@@ -571,8 +571,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo">AP</div>
-                <div class="app-name">AgriPro</div>
+                <div class="logo">FV</div>
+                <div class="app-name">Field Visit</div>
             </div>
             <nav class="nav-menu">
                 <!-- Existing Options -->

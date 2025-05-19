@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 
             <div class="form-actions">
                 <button type="submit" name="update" class="btn-update">Update Officer</button>
-                <a href="../view/floview.php" class="button">Cancel</a>
+                <a href="../view/fieldoff.php" class="button">Cancel</a>
             </div>
         </form>
     </div>

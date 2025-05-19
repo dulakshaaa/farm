@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $total_weight = $visavgwgt * $visblnbird; // Total weight in kg
     $total_feed_consumed_kg = $visfeedconsumed * 50; // Convert bags to kg (assuming 1 bag = 50kg)
     $visfcr = ($total_weight > 0) ? ($total_feed_consumed_kg / $total_weight) : 0;
-    $visavgfeed = $visfeedconsumed / $visblnbird; // Average feed per bird
+    $visavgfeed = $total_feed_consumed_kg / $visblnbird; // Average feed per bird
 
     // Set user and IP information
     $visadduser = $current_user['USRNAME'];
@@ -470,7 +470,7 @@ if ($farmerResult) {
                 const balanceBirds = parseFloat($('#VISBLNBIRD').val()) || 0;
                 const totalFeedKg = feedConsumed * 50;
                 const totalWeight = avgWgt * balanceBirds;
-                const avgFeed = feedConsumed / balanceBirds;
+                const avgFeed = totalFeedKg / balanceBirds;
                 $('#VISAVGFEED').val(avgFeed.toFixed(2));
 
                 if (totalWeight > 0) {

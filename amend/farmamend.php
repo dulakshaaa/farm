@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 
             <div class="form-actions">
                 <button type="submit" name="update" class="btn-update">Update Farm</button>
-                <a href="../view/farmview.php" class="button">Cancel</a>
+                <a href="../view/farms.php" class="button">Cancel</a>
             </div>
         </form>
     </div>

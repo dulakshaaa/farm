@@ -26,9 +26,14 @@ $sql = "SELECT
             f.FARADDRESS,
             f.FARTEL,
             f.FARPHOTO,
-            f.FARACTFLG
-        FROM FARMA f" . $whereClause;
+            f.FARACTFLG,
+            fl.FLONAME AS FieldOfficerName
+        FROM FARMA f
+        LEFT JOIN FLOMAST fl ON f.FARFLOSNO = fl.FLOSNO
+        $whereClause";
+
 $result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -148,7 +153,7 @@ $result = $conn->query($sql);
                         <th>Farm Code</th>
                         <th>Farm Address</th>
                         <th>Phone</th>
-                        <th>Photo</th>
+                        <th>Field officer</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -161,13 +166,9 @@ $result = $conn->query($sql);
                             <td><?php echo htmlspecialchars($row['FARCODE']); ?></td>
                             <td><?php echo htmlspecialchars($row['FARADDRESS']); ?></td>
                             <td><?php echo htmlspecialchars($row['FARTEL']); ?></td>
-                            <td>
-                                <?php if (!empty($row['FARPHOTO']) && file_exists('../add/uploads/' . $row['FARPHOTO'])): ?>
-                                    <img src="../add/uploads/ <?php echo htmlspecialchars($row['FARPHOTO']); ?>" alt="Farm Photo" width="100">
-                                <?php else: ?>
-                                    No photo
-                                <?php endif; ?>
-                            </td>
+                            
+                            <td><?php echo htmlspecialchars($row['FieldOfficerName']); ?></td>
+                            
 
                             <td class="<?php echo $row['FARACTFLG'] == 1 ? 'status-active' : 'status-inactive'; ?>">
                                 <?php echo $row['FARACTFLG'] == 1 ? 'Active' : 'Inactive'; ?>

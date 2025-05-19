@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $sql = "INSERT INTO FARMA (FARNAME, FARCODE, FARADDRESS, FARTEL, FARPHOTO, FARADDUSER, FARADDIP, FARFLOSNO, FARAREASNO) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("sssssssiI", $farname, $farcode, $faraddress, $fartel, $farphoto, $faradduser, $faraddip, $fieldOfficerId, $areaId);
+        $stmt->bind_param("sssssssii", $farname, $farcode, $faraddress, $fartel, $farphoto, $faradduser, $faraddip, $fieldOfficerId, $areaId);
 
         if ($stmt->execute()) {
             echo "<script>alert('New farm added successfully'); window.location.href = window.location.href;</script>";

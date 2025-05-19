@@ -157,31 +157,35 @@ mysqli_close($conn);
                     <div class="nav-icon"><i class="fas fa-tachometer-alt"></i></div>
                     <div class="nav-label">Dashboard</div>
                 </a>
-                <a href="./view/batches.php" class="nav-item">
-                    <div class="nav-icon"><i class="fas fa-boxes"></i></div>
-                    <div class="nav-label">Batches</div>
-                    <!-- Image Suggestion: Poultry chicks in a brooder -->
+                <a href="./view/area.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <div class="nav-label">Areas</div>
+                    <!-- Image Suggestion: Map with farm locations -->
                 </a>
                 <a href="./view/breeds.php" class="nav-item">
                     <div class="nav-icon"><i class="fas fa-dna"></i></div>
                     <div class="nav-label">Breeds</div>
                     <!-- Image Suggestion: Different chicken breed comparison -->
                 </a>
-                <a href="./view/farms.php" class="nav-item">
-                    <div class="nav-icon"><i class="fas fa-tractor"></i></div>
-                    <div class="nav-label">Farmers</div>
-                    <!-- Image Suggestion: Aerial view of poultry farm -->
-                </a>
                 <a href="./view/fieldoff.php" class="nav-item">
                     <div class="nav-icon"><i class="fas fa-user-shield"></i></div>
                     <div class="nav-label">Field Officers</div>
                     <!-- Image Suggestion: Agriculture officer inspecting chickens -->
                 </a>
-                <a href="./view/area.php" class="nav-item">
-                    <div class="nav-icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <div class="nav-label">Areas</div>
-                    <!-- Image Suggestion: Map with farm locations -->
+                <a href="./view/farms.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-tractor"></i></div>
+                    <div class="nav-label">Farmers</div>
+                    <!-- Image Suggestion: Aerial view of poultry farm -->
                 </a>
+                
+                <a href="./view/batches.php" class="nav-item">
+                    <div class="nav-icon"><i class="fas fa-boxes"></i></div>
+                    <div class="nav-label">Batches</div>
+                    <!-- Image Suggestion: Poultry chicks in a brooder -->
+                </a>
+                
+                
+                
 
                 <!-- New Additional Options -->
                 <a href="./view/visit.php" class="nav-item">

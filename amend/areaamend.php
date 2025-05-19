@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
 
             <div class="form-actions">
                 <button type="submit" name="update" class="btn-update">Update Area</button>
-                <a href="../view/areaview.php" class="button">Cancel</a>
+                <a href="../view/area.php" class="button">Cancel</a>
             </div>
         </form>
     </div>
