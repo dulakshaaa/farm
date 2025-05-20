@@ -282,7 +282,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                         <button class="btn btn-primary" onclick="window.location.href='./add/c-visitadd.php'">
                             <i class="fas fa-plus"></i> Add visit
                         </button>
-                        <button class="btn btn-secondary" onclick="window.location.href='?<?php echo http_build_query(array_merge($_GET, ['export' => 'csv'])); ?>'">
+                        <button class="btn btn-secondary"
+                            onclick="window.location.href='?<?php echo http_build_query(array_merge($_GET, ['export' => 'csv'])); ?>'">
                             <i class="fas fa-download"></i> Export CSV
                         </button>
 
@@ -294,12 +295,14 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
 
                 <!-- Filter Form -->
                 <form class="filter-form" method="GET" id="filter-form">
-                    <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>" placeholder="Search visits...">
+                    <input type="text" name="search" value="<?php echo htmlspecialchars($search); ?>"
+                        placeholder="Search visits...">
 
                     <select name="farm">
                         <option value="">All Farms</option>
                         <?php while ($farm = mysqli_fetch_assoc($farm_options)): ?>
-                            <option value="<?php echo $farm['FARSNO']; ?>" <?php echo $farm_filter == $farm['FARSNO'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $farm['FARSNO']; ?>"
+                                <?php echo $farm_filter == $farm['FARSNO'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($farm['FARNAME']); ?>
                             </option>
                         <?php endwhile; ?>
@@ -308,7 +311,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                     <select name="breed">
                         <option value="">All Breeds</option>
                         <?php while ($breed = mysqli_fetch_assoc($breed_options)): ?>
-                            <option value="<?php echo $breed['BRDSNO']; ?>" <?php echo $breed_filter == $breed['BRDSNO'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $breed['BRDSNO']; ?>"
+                                <?php echo $breed_filter == $breed['BRDSNO'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($breed['BRDNAME']); ?>
                             </option>
                         <?php endwhile; ?>
@@ -317,7 +321,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                     <select name="batch">
                         <option value="">All Batches</option>
                         <?php while ($batch = mysqli_fetch_assoc($batch_options)): ?>
-                            <option value="<?php echo $batch['BATSNO']; ?>" <?php echo $batch_filter == $batch['BATSNO'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $batch['BATSNO']; ?>"
+                                <?php echo $batch_filter == $batch['BATSNO'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($batch['BATCODE']); ?>
                             </option>
                         <?php endwhile; ?>
@@ -326,14 +331,17 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                     <select name="officer">
                         <option value="">All Officers</option>
                         <?php while ($officer = mysqli_fetch_assoc($officer_options)): ?>
-                            <option value="<?php echo $officer['FLOSNO']; ?>" <?php echo $officer_filter == $officer['FLOSNO'] ? 'selected' : ''; ?>>
+                            <option value="<?php echo $officer['FLOSNO']; ?>"
+                                <?php echo $officer_filter == $officer['FLOSNO'] ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($officer['FLONAME']); ?>
                             </option>
                         <?php endwhile; ?>
                     </select>
 
-                    <input type="date" name="date_from" value="<?php echo htmlspecialchars($date_from); ?>" placeholder="From Date">
-                    <input type="date" name="date_to" value="<?php echo htmlspecialchars($date_to); ?>" placeholder="To Date">
+                    <input type="date" name="date_from" value="<?php echo htmlspecialchars($date_from); ?>"
+                        placeholder="From Date">
+                    <input type="date" name="date_to" value="<?php echo htmlspecialchars($date_to); ?>"
+                        placeholder="To Date">
 
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-filter"></i> Filter
@@ -349,28 +357,40 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                         <table class="visit-table">
                             <thead>
                                 <tr>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISDDT', 'sort_order' => $sort_by == 'v.VISDDT' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Visit Date <?php echo $sort_by == 'v.VISDDT' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISDDT', 'sort_order' => $sort_by == 'v.VISDDT' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Visit Date
+                                            <?php echo $sort_by == 'v.VISDDT' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'b.BATCODE', 'sort_order' => $sort_by == 'b.BATCODE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Batch <?php echo $sort_by == 'b.BATCODE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'b.BATCODE', 'sort_order' => $sort_by == 'b.BATCODE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Batch
+                                            <?php echo $sort_by == 'b.BATCODE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
-                                        <th>Breed</th>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'fa.FARNAME', 'sort_order' => $sort_by == 'fa.FARNAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Farmer <?php echo $sort_by == 'fa.FARNAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th>Breed</th>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'fa.FARNAME', 'sort_order' => $sort_by == 'fa.FARNAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Farmer
+                                            <?php echo $sort_by == 'fa.FARNAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
                                     <th>Area</th>
 
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'f.FLONAME', 'sort_order' => $sort_by == 'f.FLONAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Officer <?php echo $sort_by == 'f.FLONAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'f.FLONAME', 'sort_order' => $sort_by == 'f.FLONAME' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Officer
+                                            <?php echo $sort_by == 'f.FLONAME' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
                                     <th>Batch Date</th>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISAGE', 'sort_order' => $sort_by == 'v.VISAGE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Age <?php echo $sort_by == 'v.VISAGE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISAGE', 'sort_order' => $sort_by == 'v.VISAGE' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Age
+                                            <?php echo $sort_by == 'v.VISAGE' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
                                     <th>Initial Birds</th>
-                                    <th><a href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISMORTALITY', 'sort_order' => $sort_by == 'v.VISMORTALITY' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
-                                            Mortality <?php echo $sort_by == 'v.VISMORTALITY' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
+                                    <th><a
+                                            href="?<?php echo http_build_query(array_merge($_GET, ['sort_by' => 'v.VISMORTALITY', 'sort_order' => $sort_by == 'v.VISMORTALITY' && $sort_order == 'ASC' ? 'DESC' : 'ASC'])); ?>">
+                                            Mortality
+                                            <?php echo $sort_by == 'v.VISMORTALITY' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
                                     <th>Motality %</th>
 
@@ -381,7 +401,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                                     <th>Avg feed</th>
                                     <th>Avg Weight</th>
                                     <th>FCR</th>
-                                    
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -398,15 +418,13 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                                         <td><?= number_format($visit['initial_birds']) ?></td>
                                         <td><?= number_format($visit['VISMORTALITY']) ?></td>
                                         <td><?= number_format($visit['VISMOTPCN']) ?></td>
-                                        
-
                                         <td><?= number_format($visit['VISBLNBIRD']) ?></td>
                                         <td><?= number_format($visit['VISFEEDCONSUMED'], 2) ?></td>
                                         <td><?= number_format($visit['VISFEEDBAL'], 2) ?></td>
                                         <td><?= number_format($visit['VISAVGFEED'], 2) ?></td>
                                         <td><?= number_format($visit['VISAVGWGT'], 2) ?></td>
                                         <td><?= number_format($visit['VISFCR'], 2) ?></td>
-                                       
+
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -420,7 +438,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                         <?php endif; ?>
 
                         <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                            <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>" class="<?php echo $i == $page ? 'active' : ''; ?>">
+                            <a href="?<?php echo http_build_query(array_merge($_GET, ['page' => $i])); ?>"
+                                class="<?php echo $i == $page ? 'active' : ''; ?>">
                                 <?php echo $i; ?>
                             </a>
                         <?php endfor; ?>
