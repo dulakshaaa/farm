@@ -618,8 +618,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             <td><?php echo number_format($visit['VISAVGFEED'], 2); ?></td>
                             <td class="action-buttons">
                                 <a href="editvisit.php?id=<?php echo $visit['batch_CODE']; ?>" class="btn btn-update">Edit</a>
-                                <a href="deletevisit.php?id=<?php echo $visit['batch_CODE']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure?');">Delete</a>
-                            </td>
+                                </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

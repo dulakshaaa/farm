@@ -148,7 +148,7 @@ $result = $conn->query($sql);
                         <td>
                             <div class="action-buttons">
                                 <a href="../amend/areaamend.php?id=<?php echo $row['AREASNO']; ?>" class="btn btn-update">Update</a>
-                                <a href="../delete/areadelete.php?id=<?php echo $row['AREASNO']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+                               
                             </div>
                         </td>
                     </tr>

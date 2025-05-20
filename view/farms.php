@@ -176,8 +176,7 @@ $result = $conn->query($sql);
                             <td>
                                 <div class="action-buttons">
                                     <a href="../amend/farmamend.php?id=<?php echo $row['FARSNO']; ?>" class="btn btn-update">Update</a>
-                                    <a href="../delete/farmdelete.php?id=<?php echo $row['FARSNO']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
-                                </div>
+                                     </div>
                             </td>
                         </tr>
                     <?php endwhile; ?>

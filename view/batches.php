@@ -158,8 +158,7 @@ $result = $conn->query($sql);
                         <td>
                             <div class="action-buttons">
                                 <a href="../amend/batchamend.php?batcode=<?php echo $row['BATCODE']; ?>" class="btn btn-update">Update</a>
-                                <a href="../delete/batchdelete.php?batcode=<?php echo $row['BATCODE']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
-                            </div>
+                                </div>
                         </td>
                     </tr>
                     <?php endwhile; ?>
