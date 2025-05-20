@@ -194,8 +194,8 @@ mysqli_close($conn);
                     <!-- Image Suggestion: Poultry feed in bags or feeding system -->
                 </a>
                 <a href="./view/health.php" class="nav-item">
-                    <div class="nav-icon"><i class="fas fa-heartbeat"></i></div>
-                    <div class="nav-label">Health Records</div>
+                    <div class="nav-icon"><i class="fas fa-clipboard-list"></i></div>
+                    <div class="nav-label">Good Issue Note (GIN)</div>
                     <!-- Image Suggestion: Veterinarian checking chickens -->
                 </a>
                 <a href="./view/production.php" class="nav-item">
