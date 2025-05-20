@@ -193,7 +193,7 @@ mysqli_close($conn);
                     <div class="nav-label">Visit Management</div>
                     <!-- Image Suggestion: Poultry feed in bags or feeding system -->
                 </a>
-                <a href="./view/health.php" class="nav-item">
+                <a href="./view/gin.php" class="nav-item">
                     <div class="nav-icon"><i class="fas fa-clipboard-list"></i></div>
                     <div class="nav-label">Good Issue Note (GIN)</div>
                     <!-- Image Suggestion: Veterinarian checking chickens -->
