@@ -121,7 +121,7 @@ $visits = mysqli_fetch_all($result, MYSQLI_ASSOC);
 $farm_options = mysqli_query($conn, "SELECT FARSNO, FARNAME FROM farma ORDER BY FARNAME");
 $breed_options = mysqli_query($conn, "SELECT BRDSNO, BRDNAME FROM breedmast ORDER BY BRDNAME");
 $batch_options = mysqli_query($conn, "SELECT BATSNO, BATCODE FROM batmast ORDER BY BATCODE");
-$officer_options = mysqli_query($conn, "SELECT FLOSNO, FLONAME FROM flomast ORDER BY FLONAME");
+$officer_options = mysqli_query($conn, "SELECT FLOSNO, FLONAME FROM flomast WHERE FLONAME = '$username' ORDER BY FLONAME");
 
 // Export to CSV
 if (isset($_GET['export']) && $_GET['export'] == 'csv') {
