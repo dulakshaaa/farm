@@ -612,13 +612,14 @@ if ($farmerResult) {
                         </div>
 
                         <div class="form-group">
-                            <label for="VISFCR">Feed Conversion Ratio (FCR)</label>
-                            <input type="number" id="VISFCR" name="VISFCR" step="0.01" readonly class="calculated-field">
-                        </div>
-                    </div>
-                    <div class="form-group">
                             <label for="VISAVGFEED">Average Feed</label>
                             <input type="number" id="VISAVGFEED" name="VISAVGFEED" step="0.01" readonly class="calculated-field">
+                        </div>
+                    </div>
+                    
+                        <div class="form-group">
+                            <label for="VISFCR">Feed Conversion Ratio (FCR)</label>
+                            <input type="number" id="VISFCR" name="VISFCR" step="0.01" readonly class="calculated-field">
                         </div>
                 </div>
             </div>
