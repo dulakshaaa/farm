@@ -393,8 +393,6 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                                             <?php echo $sort_by == 'v.VISMORTALITY' ? ($sort_order == 'ASC' ? '↑' : '↓') : ''; ?>
                                         </a></th>
                                     <th>Motality %</th>
-
-
                                     <th>Bird Balance</th>
                                     <th>Feed Consumed</th>
                                     <th>Feed Balance</th>
