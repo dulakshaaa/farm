@@ -57,7 +57,7 @@ $inactiveFarmers = $dataInactive['inactive_farmers'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriPro | Farm Management System</title>
+    <title>Farm Visit | Farm Management System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./css/home.css">
@@ -72,7 +72,7 @@ $inactiveFarmers = $dataInactive['inactive_farmers'];
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">AP</div>
-                <div class="app-name">AgriPro</div>
+                <div class="app-name">Farm Visit</div>
             </div>
             <nav class="nav-menu">
                 <!-- Existing Options -->
@@ -145,7 +145,7 @@ $inactiveFarmers = $dataInactive['inactive_farmers'];
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>AgriPro | Farm Management System</title>
+        <title>Farm Visit | Farm Management System</title>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="./css/home.css">
@@ -164,7 +164,7 @@ $inactiveFarmers = $dataInactive['inactive_farmers'];
             <aside class="sidebar">
                 <div class="sidebar-header">
                     <div class="logo">AP</div>
-                    <div class="app-name">AgriPro</div>
+                    <div class="app-name">Farm Visit</div>
                 </div>
                 <!-- Modify your user-menu div in the top-nav to include a logout option -->
                 <!-- Replace your existing user-menu div with this -->
