@@ -9,7 +9,7 @@ $user_query = $conn->prepare("SELECT * FROM usemast WHERE USRSNO = ?");
 $user_query->bind_param("i", $user_id);
 $user_query->execute();
 $current_user = $user_query->get_result()->fetch_assoc();
-
+include '../includes/visitnavbar.php';
 
 // Fetch farmers for dropdown
 $farmers = [];
@@ -65,7 +65,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $visavgwgt = filter_input(INPUT_POST, 'VISAVGWGT', FILTER_VALIDATE_FLOAT);
     $visinpfeedbag = filter_input(INPUT_POST, 'VISINPFEEDBAG', FILTER_VALIDATE_FLOAT);
     $visfeedbal = filter_input(INPUT_POST, 'VISFEEDBAL', FILTER_VALIDATE_FLOAT);
-    
+    $viscgcon = filter_input(INPUT_POST, 'VISCGCON', FILTER_SANITIZE_STRING);
+    $visgenremarks = filter_input(INPUT_POST, 'VISGENREMARKS', FILTER_SANITIZE_STRING);
+    $visremarks = filter_input(INPUT_POST, 'VISREMARKS', FILTER_SANITIZE_STRING);
+
+
 
     // Validate required fields
     if (
@@ -146,8 +150,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sql = "INSERT INTO visitmast (
                 VISFARSNO, VITBATSNO, VISFIELDOFF, VISDDT, VISAGE, VISMORTALITY, VISMOTPCN, 
                 VISBLNBIRD, VISAVGWGT, VISAVGFEED, VISFCR,
-                VISINPFEEDBAG, VISFEEDCONSUMED, VISFEEDBAL, VISADDUSER, VISADDIP, VISUSRSNO
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                VISINPFEEDBAG, VISFEEDCONSUMED, VISFEEDBAL, VISADDUSER, VISADDIP, VISUSRSNO,VISCGCON, VISREMARKS, VISGENREMARKS
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
@@ -159,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     $stmt->bind_param(
-        "iiisididdddddsssi",  // now 17 characters
+        "iiisididdddddsssisss",  // now 17 characters
         $visfarsno,
         $visbatsno,
         $visfieldoff,
@@ -176,14 +180,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $visfeedbal,
         $visadduser,
         $visaddip,
-        $visusrsno
+        $visusrsno,
+        $viscgcon,          // new
+        $visgenremarks,     // new
+        $visremarks,        // new
     );
 
 
     if ($stmt->execute()) {
         echo "<script>
                 alert('Visit record added successfully');
-                window.location.href = '../c-home.php';
+                window.location.href = '../view/visit.php';
               </script>";
     } else {
         echo "<script>
@@ -480,7 +487,7 @@ if ($farmerResult) {
                 } else {
                     $('#VISFCR').val('0.00');
                 }
-               
+
 
             }
 
@@ -577,10 +584,6 @@ if ($farmerResult) {
                             <input type="number" id="VISMOTPCN" name="VISMOTPCN" step="0.01" readonly class="calculated-field">
                         </div>
                     </div>
-                </div>
-
-                <!-- Right Column -->
-                <div class="form-column">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="VISBLNBIRD">Balance Birds</label>
@@ -591,6 +594,11 @@ if ($farmerResult) {
                             <input type="number" id="VISAVGWGT" name="VISAVGWGT" step="0.01" min="0" required>
                         </div>
                     </div>
+                </div>
+
+                <!-- Right Column -->
+                <div class="form-column">
+
 
 
 
@@ -610,24 +618,49 @@ if ($farmerResult) {
                             <label for="VISFEEDCONSUMED">Feed Consumed (bags)</label>
                             <input type="number" id="VISFEEDCONSUMED" name="VISFEEDCONSUMED" step="0.01" readonly class="calculated-field">
                         </div>
-
                         <div class="form-group">
                             <label for="VISAVGFEED">Average Feed</label>
                             <input type="number" id="VISAVGFEED" name="VISAVGFEED" step="0.01" readonly class="calculated-field">
                         </div>
+
+
                     </div>
-                    
+
+                    <div class="form-row">
                         <div class="form-group">
                             <label for="VISFCR">Feed Conversion Ratio (FCR)</label>
                             <input type="number" id="VISFCR" name="VISFCR" step="0.01" readonly class="calculated-field">
                         </div>
-                </div>
-            </div>
+                        <div class="form-group">
+                            <label for="VISCGCON">Cage Condition</label>
+                            <select name="VISCGCON" id="VISCGCON" required>
+                                <option value="">.....</option>
+                                <option value="op1">op1</option>
+                                <option value="op2">op2</option>
+                                <option value="op3">op3</option>
+                                <option value="op4">op4</option>
+                            </select>
 
-            <div class="form-actions">
-                <button type="reset">Reset</button>
-                <button type="submit">Save</button>
-            </div>
+                        </div>
+
+
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="VISREMARKS">Remarks</label>
+                            <textarea id="VISREMARKS" name="VISREMARKS" placeholder="Enter any remarks or observations..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="VISGENREMARKS"> General Remarks</label>
+                            <textarea id="VISGENREMARKS" name="VISGENREMARKS" placeholder="Enter any remarks or observations..."></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="reset">Reset</button>
+                        <button type="submit">Save</button>
+                    </div>
         </form>
     </div>
 </body>
