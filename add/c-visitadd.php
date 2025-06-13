@@ -9,7 +9,7 @@ $user_query = $conn->prepare("SELECT * FROM usemast WHERE USRSNO = ?");
 $user_query->bind_param("i", $user_id);
 $user_query->execute();
 $current_user = $user_query->get_result()->fetch_assoc();
-include '../includes/visitnavbar.php';
+
 
 // Fetch farmers for dropdown
 $farmers = [];
