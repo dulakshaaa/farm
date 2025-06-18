@@ -23,7 +23,7 @@ if ($farmerResult) {
 
 // Fetch batches for dropdown
 $batches = [];
-$batchQuery = "SELECT b.BATCODE, b.BATSNO, b.BATDDT, b.BATCHICKS, b.BATFARSNO, f.FARFLOSNO 
+$batchQuery = "SELECT b.BATCODE, b.BATSNO, b.BATDDT, b.BATCHICKS, b.batblnbrd, b.BATFARSNO, f.FARFLOSNO 
                FROM batmast b 
                JOIN farma f ON b.BATFARSNO = f.FARSNO
                WHERE b.BATACTFLG = 1
@@ -35,7 +35,7 @@ if ($batchResult) {
             'code' => $row['BATCODE'],
             'sno' => $row['BATSNO'],
             'date' => $row['BATDDT'],
-            'chicks' => $row['BATCHICKS'],
+            'chicks' => $row['batblnbrd'],
             'flosno' => $row['FARFLOSNO']
         ];
     }
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Get batch details
-    $batchQuery = "SELECT BATSNO, BATDDT, BATCHICKS FROM batmast WHERE BATCODE = ?";
+    $batchQuery = "SELECT BATSNO, BATDDT, BATCHICKS, batblnbrd FROM batmast WHERE BATCODE = ?";
     $stmt = $conn->prepare($batchQuery);
     $stmt->bind_param("s", $visbatcode);
     $stmt->execute();
@@ -128,8 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Calculate derived fields
-    $vismotpcn = ($vismortality / $batchDetails['BATCHICKS']) * 100;
-    $visblnbird = $batchDetails['BATCHICKS'] - $vismortality;
+    $vismotpcn = ($vismortality / $batchDetails['batblnbrd']) * 100;
+    $visblnbird = $batchDetails['batblnbrd'] - $vismortality;
 
 
     // Calculate feed balance
@@ -188,16 +188,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
     if ($stmt->execute()) {
-        echo "<script>
-                alert('Visit record added successfully');
-                window.location.href = '../view/visit.php';
-              </script>";
+        // ✅ UPDATE batmast.batblnbird after successful insert
+        $update_sql = "UPDATE batmast SET batblnbrd = ? WHERE batsno = ?";
+        $update_stmt = $conn->prepare($update_sql);
+
+        if ($update_stmt) {
+            $update_stmt->bind_param("ii", $visblnbird, $visbatsno);
+            if ($update_stmt->execute()) {
+                echo "<script>
+                alert('Visit added and batch bird count updated.');
+                window.location.href = 'c-visitadd.php'; // or your desired page
+            </script>";
+            } else {
+                echo "<script>
+                alert('Visit added, but failed to update batch bird count.');
+                window.history.back();
+            </script>";
+            }
+            $update_stmt->close();
+        } else {
+            echo "<script>
+            alert('Visit added, but failed to prepare batch update: " . addslashes($conn->error) . "');
+            window.history.back();
+        </script>";
+        }
     } else {
         echo "<script>
-                alert('Error: " . addslashes($conn->error) . "');
-                window.history.back();
-              </script>";
+        alert('Error inserting visit: " . addslashes($stmt->error) . "');
+        window.history.back();
+    </script>";
     }
+
     $stmt->close();
 }
 // Fetch farmers for dropdown with area information

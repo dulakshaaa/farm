@@ -23,8 +23,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $batlocation = $_POST['BATLOCATION'];
     $adduser = $_SESSION['username'] ?? 'unknown_user';
 
-    $stmt = $conn->prepare("INSERT INTO batmast (BATCODE, BATFARSNO, BATDDT, BATBREEDSNO, BATCHICKS, BATADDIP, BATLOCATION,BATADDUSER) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssisss", $batcode, $batfarsno, $batddt, $batbreedsno, $batchicks, $bataddip, $batlocation, $adduser);
+    $stmt = $conn->prepare("INSERT INTO batmast (BATCODE, BATFARSNO, BATDDT, BATBREEDSNO, BATCHICKS, batblnbrd, BATADDIP, BATLOCATION,BATADDUSER) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssiisss", $batcode, $batfarsno, $batddt, $batbreedsno, $batchicks,$batchicks, $bataddip, $batlocation, $adduser);
     
     if ($stmt->execute()) {
         $success = "Batch saved successfully!";
