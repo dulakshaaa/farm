@@ -1,14 +1,15 @@
 <?php
 require_once '../includes/connect.php';
 require_login();  // This will redirect to login if not authenticated
-include '../includes/visitnavbar.php';
+
+require_once '../includes/geolocation_access.php';
 // Get current user data
 $user_id = $_SESSION['user_id'];
 $user_query = $conn->prepare("SELECT * FROM usemast WHERE USRSNO = ?");
 $user_query->bind_param("i", $user_id);
 $user_query->execute();
 $current_user = $user_query->get_result()->fetch_assoc();
-
+include '../includes/visitnavbar.php';
 
 // Fetch farmers for dropdown
 $farmers = [];
