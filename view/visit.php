@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/connect.php';
 require_login(); // Redirects to login if not authenticated
-include '../includes/visitnavbar.php';
+
 // Pagination settings
 $records_per_page = 10;
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -162,7 +162,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     exit;
 }
 ?>
-
+<?php include '../includes/visitnavbar.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 
