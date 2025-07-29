@@ -171,13 +171,13 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Visit Records</title>
     <link rel="stylesheet" href="../css/visit1.css">
-    <link rel="stylesheet" href="../css/visit2.css">
+    <link rel="stylesheet" href="../css/visit3.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -297,8 +297,8 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
                             <td><?php echo htmlspecialchars($visit['VISINPFEEDBAG']); ?></td>
                             <td><?php echo number_format($visit['VISAVGFEED'], 2); ?></td>
                             <td class="action-buttons">
-                                <a href="editvisit.php?id=<?php echo $visit['batch_CODE']; ?>" class="btn btn-update">Edit</a>
-                                </td>
+                                <a href="../amend/visitamend.php?id=<?php echo $visit['VISSNO']; ?>" class="btn btn-update">Edit</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
