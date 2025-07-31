@@ -37,6 +37,8 @@ $totalFarmers = $data['total_farmers'];
 
 
 
+
+
 // Query to get the total number of active farmers
 // Query to get the total number of active farmers
 $queryActive = "SELECT COUNT(*) AS active_farmers FROM farma WHERE FARACTFLG = 1";
