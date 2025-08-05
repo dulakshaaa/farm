@@ -188,7 +188,7 @@ if (isset($_GET['export']) && $_GET['export'] == 'csv') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./css/c-home1.css">
-    <link rel="stylesheet" href="./css/c-home3.css">
+    <link rel="stylesheet" href="./css/c-home2.css">
     <link rel="stylesheet" href="./css/table.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
