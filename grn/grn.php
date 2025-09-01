@@ -103,7 +103,7 @@
                 </div>
                 <div class="form-group">
                     
-                    <input type="hidden" id="grandTotal" name="grandTotal" readonly>
+                    <input type="number" id="grandTotal" name="grandTotal" readonly>
                 </div>
             </div>
 
@@ -135,7 +135,7 @@
                 </div>
                 <div>
                     <label>Grand Total</label><br>
-                    <input type="number" id="grandTotal" name="grandTotal" readonly>
+                    <input type="number" id="grandTotal1" name="grandTotal" readonly>
                 </div>
             </div>
         </form>
@@ -489,6 +489,7 @@
             $('#sumVat').val(totalVat.toFixed(2));
             $('#sumDiscount').val(totalDiscount.toFixed(2));
             $('#grandTotal').val(grandTotal.toFixed(2));
+            $('#grandTotal1').val(grandTotal.toFixed(2));
         }
 
         // Update summary when row values change
