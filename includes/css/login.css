@@ -1,0 +1,50 @@
+/* login.css - to be used with add.css */
+.login-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--dark-2);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.login-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--primary-light);
+    text-align: center;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.login-form button {
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    font-size: 1rem;
+}
+
+.login-form button:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+@media (max-width: 768px) {
+    .login-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+    }
+}

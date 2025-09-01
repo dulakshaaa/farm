@@ -142,6 +142,59 @@ mysqli_close($conn);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./css/home1.css">
     <link rel="stylesheet" href="./css/table.css">
+    <style>
+        .nav-options {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-item {
+            position: relative;
+            cursor: pointer;
+            padding: 10px 15px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: rgb(137, 100, 249);
+        }
+
+        .nav-label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            z-index: 100;
+            padding: 5px 0;
+        }
+
+        .nav-item:hover .nav-dropdown {
+            display: block;
+        }
+
+        .nav-dropdown .dropdown-item {
+            display: block;
+            padding: 8px 15px;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .nav-dropdown .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
 
 </head>
 
@@ -228,9 +281,61 @@ mysqli_close($conn);
         <main class="main-content">
             <!-- Top Navigation Bar -->
             <header class="top-nav">
-                <div class="search-bar">
-                    <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search farms, batches, reports...">
+                <div class="nav-options">
+                    <div class="nav-item">
+                        <span class="nav-label">SYSTEM </span>
+                        <div class="nav-dropdown">
+                            <a href="./view/sys.php" class="dropdown-item">SYSMAST </a>
+                            <a href="./view/view_sup.php" class="dropdown-item">SUPPLIERMAST</a>
+                            <a href="./view/view_loc.php" class="dropdown-item">LOCMAST</a>
+                            <a href="./view/view_stk.php" class="dropdown-item">STKMAST</a>
+                            <a href="#" class="dropdown-item">op5</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <span class="nav-label">Batches </span>
+                        <div class="nav-dropdown">
+                            <a href="#" class="dropdown-item">op1</a>
+                            <a href="#" class="dropdown-item">op2</a>
+                            <a href="#" class="dropdown-item">op3</a>
+                            <a href="#" class="dropdown-item">op4</a>
+                            <a href="#" class="dropdown-item">op5</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <span class="nav-label">Inventory </span>
+                        <div class="nav-dropdown">
+                            <a href="#" class="dropdown-item">op1</a>
+                            <a href="#" class="dropdown-item">op2</a>
+                            <a href="#" class="dropdown-item">op3</a>
+                            <a href="#" class="dropdown-item">op4</a>
+                            <a href="#" class="dropdown-item">op5</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <span class="nav-label">Reports </span>
+                        <div class="nav-dropdown">
+                             <a href="#" class="dropdown-item">op1</a>
+                            <a href="#" class="dropdown-item">op2</a>
+                            <a href="#" class="dropdown-item">op3</a>
+                            <a href="#" class="dropdown-item">op4</a>
+                            <a href="#" class="dropdown-item">op5</a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item">
+                        <span class="nav-label">Admin </span>
+                        <div class="nav-dropdown">
+                            <a href="#" class="dropdown-item">op1</a>
+                            <a href="#" class="dropdown-item">op2</a>
+                            <a href="#" class="dropdown-item">op3</a>
+                            <a href="#" class="dropdown-item">op4</a>
+                            <a href="#" class="dropdown-item">op5</a>
+                        </div>
+                    </div>
                 </div>
                 <!-- Modify your user-menu div in the top-nav to include a logout option -->
                 <!-- Replace your existing user-menu div with this -->

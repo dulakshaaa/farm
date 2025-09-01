@@ -1,0 +1,191 @@
+/* view.css */
+:root {
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --primary-dark: #4338ca;
+    --secondary: #10b981;
+    --secondary-dark: #0d9488;
+    --accent: #f59e0b;
+    --danger: #ef4444;
+    --success: #10b981;
+    --dark-1: #0f172a;
+    --dark-2: #1e293b;
+    --dark-3: #334155;
+    --light-1: #f8fafc;
+    --light-2: #e2e8f0;
+    --light-3: #94a3b8;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --radius-sm: 0.25rem;
+    --radius: 0.5rem;
+}
+
+/* Reset for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Base Styles */
+body {
+    background-color: var(--dark-1);
+    color: var(--light-1);
+    font-family: 'Inter', sans-serif;
+    padding: clamp(1rem, 3vw, 2rem);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Paragraphs */
+p {
+    color: var(--light-3);
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    font-size: clamp(0.875rem, 2vw, 0.9375rem);
+}
+
+/* Container */
+.container {
+    background-color: var(--dark-2);
+    padding: clamp(1rem, 3vw, 2rem);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Table Styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    table-layout: auto;
+}
+
+thead th {
+    background-color: var(--dark-3);
+    color: var(--light-1);
+    font-weight: 600;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    text-align: left;
+    font-size: clamp(0.8125rem, 2vw, 0.9375rem);
+    border-bottom: 2px solid var(--primary-dark);
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: clamp(0.75rem, 2vw, 1rem);
+    color: var(--light-2);
+    font-size: clamp(0.75rem, 1.8vw, 0.875rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    word-wrap: break-word;
+}
+
+tbody tr {
+    transition: var(--transition);
+}
+
+tbody tr:hover {
+    background-color: var(--dark-3);
+    transform: translateY(-2px);
+}
+
+/* No Records Message */
+.container p {
+    color: var(--light-2);
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    text-align: center;
+    padding: clamp(0.75rem, 2vw, 1rem);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: clamp(0.75rem, 2vw, 1rem);
+    }
+
+    .container {
+        padding: clamp(1rem, 2.5vw, 1.5rem);
+    }
+
+    /* Convert table to stacked layout */
+    table {
+        display: flex;
+        flex-direction: column;
+    }
+
+    thead {
+        display: none; /* Hide headers on small screens */
+    }
+
+    tbody, tr, td {
+        display: block;
+        width: 100%;
+    }
+
+    tbody tr {
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background-color: var(--dark-2);
+        border-radius: var(--radius-sm);
+    }
+
+    tbody td {
+        padding: 0.5rem;
+        border-bottom: none;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    tbody td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0.5rem;
+        width: 45%;
+        padding-right: 0.5rem;
+        font-weight: 600;
+        color: var(--light-1);
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .container {
+        padding: 1rem;
+        margin: 0 0.5rem;
+    }
+
+    tbody td {
+        font-size: clamp(0.7rem, 2.5vw, 0.8125rem);
+        padding-left: 40%;
+    }
+
+    tbody td:before {
+        width: 35%;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
