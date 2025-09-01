@@ -8,11 +8,11 @@ $search = isset($_GET['q']) ? trim($_GET['q']) : "";
 
 if ($search === "") {
     // Show first 50 locations
-    $sql = "SELECT locsno, locnam FROM locmast LIMIT 50";
+    $sql = "SELECT supsno, supnam FROM supmast LIMIT 50";
     $stmt = $conn->prepare($sql);
 } else {
     // Search locations by name
-    $sql = "SELECT locsno, locnam FROM locmast WHERE locnam LIKE ? LIMIT 10";
+    $sql = "SELECT supsno, supnam FROM supmast WHERE supnam LIKE ? LIMIT 10";
     $stmt = $conn->prepare($sql);
     $like = "%" . $search . "%";
     $stmt->bind_param("s", $like);
@@ -24,8 +24,9 @@ $result = $stmt->get_result();
 $data = [];
 while ($row = $result->fetch_assoc()) {
     $data[] = [
-        "id" => $row['locsno'],   // return as "id" for frontend
-        "name" => $row['locnam']  // return as "name"
+        "id" => $row['supsno'],   // return as "id" for frontend
+        "name" => $row['supnam'],  // return as "name"
+        "code" => ""
     ];
 }
 
