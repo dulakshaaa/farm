@@ -179,7 +179,7 @@ body {
 /* Dropdown List */
 .dropdown-list {
   position: absolute;
-  width: calc(100% + 2px); /* Slightly wider to cover table borders */
+  width: calc(100% + 50px); /* Slightly wider to cover table borders */
   max-height: 150px;
   overflow-y: auto;
   background: rgb(243, 243, 243);
@@ -242,7 +242,7 @@ body {
 /* Delete Button */
 .delete聁
 
-.delete-btn {
+.delete-btn12 {
   background-color: #f44336;
   color: #ffffff;
   border: none;
@@ -252,9 +252,93 @@ body {
   cursor: pointer;
 }
 
-.delete-btn:hover {
+.delete-btn1:hover {
   background-color: #d32f2f;
 }
+.btn {
+  display: inline-block;
+  font-weight: 500;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid #222222;
+  padding: 12px 28px;
+  font-size: 15px;
+  line-height: 1.5;
+  border-radius: 3px;
+  transition: all 0.15s ease-in-out;
+  cursor: pointer;
+}
+
+.btn-primary {
+  color: #ffffff;
+  background-color: rgba(67, 9, 143, 1);
+}
+.btn-primary2 {
+  color: #ffffff;
+  background-color: rgb(28, 86, 212);
+}
+
+.btn-primary:hover {
+  color: #580088ff;
+  background-color: #ffffffff;
+  border-color: #580088ff;
+}
+
+.btn-primary1 {
+  color: #ffffff;
+  background-color: #580088ff;
+}
+
+.btn-primary1:hover {
+  color: #ffffffff;
+  background-color: #340e66ff;
+  border-color: #580088ff;
+  /* border-color: #7e0202ff; */
+}
+.select-control {
+  width:100px;
+  padding: 8px 10px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+  background-color: #ffffff;
+  border: 1px solid #979797;
+  border-radius: 3px;
+  appearance: none; /* removes default arrow in most browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  position: relative;
+  z-index: 1;
+  cursor: pointer;
+}
+
+/* Focus state */
+.select-control:focus {
+  outline: 0;
+  border-color: #1b1b1b;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  z-index: 2;
+}
+
+/* Optional: add custom arrow on the right */
+.select-control-wrapper {
+  position: relative;
+}
+
+.select-control-wrapper::after {
+  content: "▼"; /* arrow symbol */
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 10px;
+  color: #333333;
+}
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -271,7 +355,7 @@ body {
   }
 
   .dropdown-container {
-    width: 100%;
+    width: 300px;
   }
 
   .itemdes-input {
@@ -279,7 +363,7 @@ body {
   }
 
   .dropdown-list {
-    width: 100%;
+    width: 300px;
     left: 0;
   }
 }

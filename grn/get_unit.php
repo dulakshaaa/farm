@@ -1,19 +1,26 @@
 <?php
 require '../includes/connect.php';
 
-$sql = "SELECT syssno, sysdes1 FROM sysmast WHERE sysrno = 7";
+$sql = "SELECT * FROM sysmast WHERE sysrno = 7";
 $result = $conn->query($sql);
 
 if ($result && $result->num_rows > 0) {
-    $row = $result->fetch_assoc();
+    $data = [];
+
+    while ($row = $result->fetch_assoc()) {
+        $data[] = [
+            "syssno"  => $row['syssno'],
+            "sysdes1" => $row['sysdes1']
+        ];
+    }
+
     echo json_encode([
         "status" => "success",
-        "syssno" => $row['syssno'],
-        "sysdes1" => $row['sysdes1']
+        "units"  => $data
     ]);
 } else {
     echo json_encode([
-        "status" => "error",
-        "message" => "No unit found"
+        "status"  => "error",
+        "message" => "No units found"
     ]);
 }

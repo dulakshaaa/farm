@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="grn.css">
+    <link rel="stylesheet" href="css-grn12.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>GRN</title>
     <style>
@@ -31,6 +31,20 @@
         .dropdown-container {
             position: relative;
         }
+
+        .delete-btn12 {
+            background-color: #f44336;
+            color: #ffffff;
+            border: none;
+            border-radius: 3px;
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .delete-btn12:hover {
+            background-color: #d32f2f;
+        }
     </style>
 </head>
 
@@ -45,6 +59,8 @@
             <a href="/settings"><button class="btn btn-primary">Display</button></a>
             <a href="/support"><button class="btn btn-primary">Delete</button></a>
         </div>
+        <br>
+        <br>
 
         <!-- HEADER FORM -->
         <form id="headerForm" action="" method="post">
@@ -61,19 +77,19 @@
 
                 <!-- GRN number -->
                 <div class="form-group">
-                    <label for="grnno">GRN NO</label>
+                    <label for="grnno">GRN No</label>
                     <input type="text" class="form-control" id="grnno" required>
                 </div>
 
                 <!-- GRN date -->
                 <div class="form-group">
-                    <label for="grnddt">GRN DATE</label>
+                    <label for="grnddt">GRN Date</label>
                     <input type="date" class="form-control" id="grnddt">
                 </div>
 
                 <!-- GRN time -->
                 <div class="form-group">
-                    <label for="grntime">GRN TIME</label>
+                    <label for="grntime">GRN Time</label>
                     <input type="time" class="form-control" id="grntime">
                 </div>
             </div>
@@ -92,7 +108,7 @@
 
                 <!-- Invoice number -->
                 <div class="form-group">
-                    <label for="invoiceno">INVOICE NUMBER</label>
+                    <label for="invoiceno">Invoice Number</label>
                     <input type="text" class="form-control" id="invoiceno">
                 </div>
 
@@ -102,8 +118,8 @@
                     <input type="text" class="form-control" id="inhremarks">
                 </div>
                 <div class="form-group">
-                    
-                    <input type="number" id="grandTotal" name="grandTotal" readonly>
+
+                    <input type="hidden" id="grandTotal" name="grandTotal" readonly>
                 </div>
             </div>
 
@@ -119,23 +135,23 @@
             <div style="display:flex; gap:20px; flex-wrap:wrap;">
                 <div>
                     <label>Total Quantity</label><br>
-                    <input type="number" id="sumQuantity" readonly>
+                    <input type="number" id="sumQuantity" class="form-control" readonly>
                 </div>
                 <div>
                     <label>Total Cost</label><br>
-                    <input type="number" id="sumCost" readonly>
+                    <input type="number" id="sumCost" class="form-control" readonly>
                 </div>
                 <div>
                     <label>Total VAT</label><br>
-                    <input type="number" id="sumVat" readonly>
+                    <input type="number" id="sumVat" class="form-control" readonly>
                 </div>
                 <div>
                     <label>Total Discount</label><br>
-                    <input type="number" id="sumDiscount" readonly>
+                    <input type="number" id="sumDiscount" class="form-control" readonly>
                 </div>
                 <div>
                     <label>Grand Total</label><br>
-                    <input type="number" id="grandTotal1" name="grandTotal" readonly>
+                    <input type="number" id="grandTotal1" name="grandTotal" class="form-control" readonly>
                 </div>
             </div>
         </form>
@@ -165,18 +181,24 @@
                     <tr>
                         <td class="dropdown-cell">
                             <div class="dropdown-container">
-                                <input type="text" class="form-control itemdes-input" autocomplete="off" required>
+                                <input type="text" class="form-control1 itemdes-input" autocomplete="off" required>
                                 <input type="hidden" class="item-id">
                                 <div class="dropdown-list item-list"></div>
                             </div>
                         </td>
-                        <td><input type="text" name="item_unit[]" required></td>
+                        <td>
+                            <div class="select-control-wrapper">
+                                <select class="select-control unitDropdown" name="unit[]">
+                                    <option value="">Select Unit</option>
+                                </select>
+                            </div>
+                        </td>
                         <td><input type="number" name="quantity[]" min="0" required></td>
                         <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
                         <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" required></td>
                         <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" required></td>
                         <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
-                        <td><button type="button" class="delete-btn">×</button></td>
+                        <td><button type="button" class="delete-btn12">×</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -204,26 +226,37 @@
                 }
             });
 
+            // NEW: find the unit dropdown inside the new row
+            let unitsData = [];
+
+            // ------------------ FETCH UNITS ONCE ------------------
             $.ajax({
-                url: "get_units.php",
+                url: "get_unit.php",
                 type: "GET",
                 dataType: "json",
                 success: function (response) {
                     if (response.status === "success") {
-                        unitsData = response.data;
+                        unitsData = response.units;
+
+                        // Populate all existing unit dropdowns
+                        $(".unitDropdown").each(function () {
+                            populateUnitDropdown($(this));
+                        });
+                    } else {
+                        alert(response.message || "No units found");
                     }
                 }
             });
 
-            // When a new row is added → fill the dropdown
+            // ------------------ HELPER: POPULATE A DROPDOWN ------------------
             function populateUnitDropdown($select) {
-                $select.empty().append('<option value="">-- Select Unit --</option>');
+                $select.empty().append('<option value="">Select Unit</option>');
                 unitsData.forEach(unit => {
-                    $select.append(`<option value="${unit.syssno}">${unit.sysname}</option>`);
+                    $select.append(`<option value="${unit.syssno}">${unit.sysdes1}</option>`);
                 });
             }
 
-            // ------------------ INIT SEARCH FOR DEFAULT ROW ------------------
+            // ------------------ INIT SEARCH FOR DEFAULT ROW(S) ------------------
             $("#grnTable tbody tr").each(function () {
                 initializeItemSearch($(this));
             });
@@ -231,25 +264,37 @@
             // ------------------ ADD NEW ROW ------------------
             $("#addLineBtn").click(function () {
                 let newRow = `<tr>
-                    <td>
-                        <div class="dropdown-container">
-                            <input type="text" class="form-control1 itemdes-input" autocomplete="off" required>
-                            <input type="hidden" class="item-id">
-                            <div class="dropdown-list item-list"></div>
-                        </div>
-                    </td>
-                    <td><input type="text" name="item_unit[]" class="unt-input" required>
-                    <input type="hidden" class="unt-id"></td>
-                    <td><input type="number" name="quantity[]" min="0" required></td>
-                    <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
-                    <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" required></td>
-                    <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" required></td>
-                    <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
-                    <td><button type="button" class="delete-btn">×</button></td>
-                </tr>`;
+            <td>
+                <div class="dropdown-container">
+                    <input type="text" class="form-control1 itemdes-input" autocomplete="off" required>
+                    <input type="hidden" class="item-id">
+                    <div class="dropdown-list item-list"></div>
+                </div>
+            </td>
+            <td>
+                <div class="select-control-wrapper">
+  <select class="select-control unitDropdown" name="unit[]">
+      <option value="">Select Unit</option>
+  </select>
+</div>
+            </td>
+            <td><input type="number" name="quantity[]" min="0" required></td>
+            <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
+            <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" required></td>
+            <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" required></td>
+            <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
+            <td><button type="button" class="delete-btn12">×</button></td>
+        </tr>`;
+
+                // Append the new row
                 $("#grnTable tbody").append(newRow);
-                // Enable search on new row
+
+                // Enable search for items in the new row
                 initializeItemSearch($("#grnTable tbody tr:last"));
+
+                // Populate the unit dropdown in this new row
+                let unitDropdown = $("#grnTable tbody tr:last").find(".unitDropdown");
+                populateUnitDropdown(unitDropdown);
             });
 
             // ------------------ DELETE ROW ------------------
