@@ -76,15 +76,12 @@
                 </div>
 
                 <!-- GRN number -->
-                <div class="form-group">
-                    <label for="grnno">GRN No</label>
-                    <input type="text" class="form-control" id="grnno" required>
-                </div>
+
 
                 <!-- GRN date -->
                 <div class="form-group">
                     <label for="grnddt">GRN Date</label>
-                    <input type="date" class="form-control" id="grnddt">
+                    <input type="date" class="form-control" id="grnddt" name="grnddt">
                 </div>
 
                 <!-- GRN time -->
@@ -109,13 +106,13 @@
                 <!-- Invoice number -->
                 <div class="form-group">
                     <label for="invoiceno">Invoice Number</label>
-                    <input type="text" class="form-control" id="invoiceno">
+                    <input type="text" class="form-control" name="invoiceno" id="invoiceno">
                 </div>
 
                 <!-- Remarks -->
                 <div class="form-group">
                     <label for="inhremarks">Remarks</label>
-                    <input type="text" class="form-control" id="inhremarks">
+                    <input type="text" class="form-control" id="inhremarks" name="inhremarks">
                 </div>
                 <div class="form-group">
 
@@ -182,7 +179,7 @@
                         <td class="dropdown-cell">
                             <div class="dropdown-container">
                                 <input type="text" class="form-control1 itemdes-input" autocomplete="off" required>
-                                <input type="hidden" class="item-id">
+                                <input type="hidden" class="item-id" name="itemid[]">
                                 <div class="dropdown-list item-list"></div>
                             </div>
                         </td>
@@ -267,7 +264,7 @@
             <td>
                 <div class="dropdown-container">
                     <input type="text" class="form-control1 itemdes-input" autocomplete="off" required>
-                    <input type="hidden" class="item-id">
+                    <input type="hidden" class="item-id" name="itemid[]">
                     <div class="dropdown-list item-list"></div>
                 </div>
             </td>
@@ -349,6 +346,8 @@
 
                     if (headerResponse.status !== 'success') {
                         $(".message").html("Failed to save header!");
+                        console.log("Header response:", headerResponse);
+
                         return;
                     }
 
@@ -362,7 +361,8 @@
                     });
 
                     if (grnResponse.status === 'success') {
-                        $(".message").html("GRN and header saved successfully!");
+                        $(".message").html(`GRN and header saved successfully! GRN Number: <strong>${headerResponse.grnno}</strong>`);
+
                         $("#headerForm")[0].reset();
                         $("#grnForm")[0].reset();
                         $("#grnForm").hide();
@@ -375,10 +375,18 @@
                     }
 
                 } catch (err) {
-                    console.error(err);
-                    $(".message").html("Error submitting forms!");
+                    // Check if it's an AJAX error
+                    if (err.responseText) {
+                        console.error("AJAX Error:", err.status, err.statusText, err.responseText);
+                    } else if (err.message) {
+                        console.error("JS Error:", err.message);
+                    } else {
+                        console.error("Unknown Error:", err);
+                    }
+                    $(".message").html("Error submitting forms! Check console for details.");
                 }
             });
+
 
             // ------------------ INIT DROPDOWNS FOR HEADER ------------------
             initializeDropdownSearch(".loc-input", ".loc-id", ".loc-list", "search_loc.php");

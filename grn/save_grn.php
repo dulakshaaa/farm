@@ -1,79 +1,70 @@
 <?php
-include '../includes/connect.php'; // DB connection
-
+include '../includes/connect.php'; // adjust path
 header('Content-Type: application/json');
 
-if (!isset($_POST['header_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Missing header ID']);
-    exit;
-}
+$response = ['status' => 'error', 'message' => 'No data saved'];
 
-$header_id = intval($_POST['header_id']);
-$item_ids  = $_POST['item_id'] ?? [];
-$units     = $_POST['item_unit'] ?? [];
-$quantities= $_POST['quantity'] ?? [];
-$costs     = $_POST['Cost'] ?? [];
-$vats      = $_POST['Vat'] ?? [];
-$discounts = $_POST['Dis'] ?? [];
-$totals    = $_POST['total'] ?? [];
+if (isset($_POST['header_id'])) {
+    $headerId = intval($_POST['header_id']);
 
-if (empty($item_ids)) {
-    echo json_encode(['status' => 'error', 'message' => 'No detail lines']);
-    exit;
-}
+    if ($headerId <= 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid header ID']);
+        exit;
+    }
 
-$conn->begin_transaction();
-try {
-    $lineNo = 1;
-    $grandTotal = 0;
+    $itemIds    = isset($_POST['itemid']) && is_array($_POST['itemid']) ? $_POST['itemid'] : [];
+    $units      = isset($_POST['unit']) && is_array($_POST['unit']) ? $_POST['unit'] : [];
+    $quantities = isset($_POST['quantity']) && is_array($_POST['quantity']) ? $_POST['quantity'] : [];
+    $costs      = isset($_POST['Cost']) && is_array($_POST['Cost']) ? $_POST['Cost'] : [];
+    $vats       = isset($_POST['Vat']) && is_array($_POST['Vat']) ? $_POST['Vat'] : [];
+    $discounts  = isset($_POST['Dis']) && is_array($_POST['Dis']) ? $_POST['Dis'] : [];
+    $totals     = isset($_POST['total']) && is_array($_POST['total']) ? $_POST['total'] : [];
 
-    $stmt = $conn->prepare("
-        INSERT INTO inltran
-        (INLINHSNO, INLLNO, INLSTKSNO, INLQTY, INLUNTSNO, INLDDT, INLADDUSR, INLADDDT, INLADDTIME, INLADDIP) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    $success = true;
 
-    $today = date("Y-m-d");
-    $now   = date("H:i:s");
-    $ip    = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
-    $user  = 'system'; // replace with logged-in user if available
+    // Start transaction
+    $conn->begin_transaction();
 
-    foreach ($item_ids as $i => $item_id) {
-        $qty   = floatval($quantities[$i] ?? 0);
-        $unit  = intval($units[$i] ?? 0);   // must match sysmast.syssno
-        $total = floatval($totals[$i] ?? 0);
+    try {
+        for ($i = 0; $i < count($itemIds); $i++) {
+            $itemId   = intval($itemIds[$i]);
+            $unitId   = intval($units[$i]);
+            $qty      = floatval($quantities[$i]);
+            $cost     = floatval($costs[$i]);
+            $vat      = floatval($vats[$i]);
+            $dis      = floatval($discounts[$i]);
+            $total    = floatval($totals[$i]);
+            $lineDate = date('Y-m-d');
+            $lineNo   = $i + 1;
 
-        $stmt->bind_param(
-            "iiidisssss",
-            $header_id,
-            $lineNo,
-            $item_id,
-            $qty,
-            $unit,
-            $today,
-            $user,
-            $today,
-            $now,
-            $ip
-        );
-        if (!$stmt->execute()) {
-            throw new Exception("Insert failed: " . $stmt->error);
+            // Skip empty rows
+            if ($itemId > 0 && $qty > 0 && $unitId > 0) {
+                $sql = "INSERT INTO inltran 
+                        (INLINHSNO, INLLNO, INLSTKSNO, INLUNTSNO, INLQTY, INLDDT, INLCOST, INLVAT, INLDIS, INLTOTAL)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param(
+                    "iiiidddddd",
+                    $headerId, $lineNo, $itemId, $unitId, $qty, $lineDate, $cost, $vat, $dis, $total
+                );
+
+                if (!$stmt->execute()) {
+                    $success = false;
+                    throw new Exception("Failed line $lineNo: " . $stmt->error);
+                }
+            }
         }
 
-        $grandTotal += $total;
-        $lineNo++;
-    }
+        $conn->commit();
 
-    // update header with grand total
-    $stmt2 = $conn->prepare("UPDATE inhtran SET INHTOT = ? WHERE INHSNO = ?");
-    $stmt2->bind_param("di", $grandTotal, $header_id);
-    if (!$stmt2->execute()) {
-        throw new Exception("Failed to update header total: " . $stmt2->error);
-    }
+        $response = ['status' => 'success', 'message' => 'GRN lines saved successfully!'];
 
-    $conn->commit();
-    echo json_encode(['status' => 'success']);
-} catch (Exception $e) {
-    $conn->rollback();
-    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+    } catch (Exception $e) {
+        $conn->rollback();
+        $response = ['status' => 'error', 'message' => $e->getMessage()];
+    }
 }
+
+echo json_encode($response);
+?>
