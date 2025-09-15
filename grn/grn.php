@@ -192,8 +192,8 @@
                         </td>
                         <td><input type="number" name="quantity[]" min="0" required></td>
                         <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
-                        <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" required></td>
-                        <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" required></td>
+                        <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" ></td>
+                        <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" ></td>
                         <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
                         <td><button type="button" class="delete-btn12">×</button></td>
                     </tr>
@@ -277,8 +277,8 @@
             </td>
             <td><input type="number" name="quantity[]" min="0" required></td>
             <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
-            <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" required></td>
-            <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" required></td>
+            <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" ></td>
+            <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" ></td>
             <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
             <td><button type="button" class="delete-btn12">×</button></td>
         </tr>`;
