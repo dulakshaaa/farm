@@ -56,9 +56,9 @@ try {
 
     // Insert header
     $insertInh = $conn->prepare("INSERT INTO inhtran 
-        (INHDNO, INHINVNO, INHTYPSNO, INHLOCSNO, INHDDT, INHTOT, INHREM) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $insertInh->bind_param("ssiidds", $grnNo, $invoiceno, $typeid, $locid, $grnddt, $inhtotal, $inhremarks);
+        (INHDNO, INHINVNO, INHTYPSNO, INHLOCSNO, INHDDT, INHTOT, INHSUPSNO, INHREM) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $insertInh->bind_param("ssiiddss", $grnNo, $invoiceno, $typeid, $locid, $grnddt, $inhtotal, $supid, $inhremarks);
     $insertInh->execute();
 
     $headerId = $conn->insert_id; // This is the FK for GRN lines

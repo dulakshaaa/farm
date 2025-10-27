@@ -54,13 +54,14 @@
 
         <!-- Navigation buttons -->
         <div class="space">
-            <a href="/dashboard"><button class="btn btn-primary">Add</button></a>
-            <a href="/reports"><button class="btn btn-primary">Amend</button></a>
-            <a href="/settings"><button class="btn btn-primary">Display</button></a>
+            <a href="./grn.php"><button class="btn btn-primary">Add</button></a>
+            <a href="./grnedit.php"><button class="btn btn-primary">Amend</button></a>
+            <a href="./disnew.php"><button class="btn btn-primary">Display</button></a>
             <a href="/support"><button class="btn btn-primary">Delete</button></a>
         </div>
         <br>
         <br>
+
 
         <!-- HEADER FORM -->
         <form id="headerForm" action="" method="post">
@@ -192,8 +193,8 @@
                         </td>
                         <td><input type="number" name="quantity[]" min="0" required></td>
                         <td><input type="number" name="Cost[]" min="0" step="0.01" class="cost" required></td>
-                        <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat" ></td>
-                        <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis" ></td>
+                        <td><input type="number" name="Vat[]" min="0" step="0.01" class="vat"></td>
+                        <td><input type="number" name="Dis[]" min="0" step="0.01" class="dis"></td>
                         <td><input type="number" name="total[]" min="0" step="0.01" class="total" readonly></td>
                         <td><button type="button" class="delete-btn12">×</button></td>
                     </tr>

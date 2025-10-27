@@ -289,7 +289,7 @@ mysqli_close($conn);
                             <a href="./view/view_sup.php" class="dropdown-item">SUPPLIERMAST</a>
                             <a href="./view/view_loc.php" class="dropdown-item">LOCMAST</a>
                             <a href="./view/view_stk.php" class="dropdown-item">STKMAST</a>
-                            <a href="#" class="dropdown-item">op5</a>
+                            <a href="./grn/" class="dropdown-item">GRN</a>
                         </div>
                     </div>
 
