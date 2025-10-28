@@ -31,7 +31,7 @@ $sql = "SELECT
             f.FLOAREASNO,
             a.AREANAME,
             f.FLOACTFLG
-        FROM FLOMAST f
+        FROM flomast f
         LEFT JOIN areamast a ON f.FLOAREASNO = a.AREASNO" . $whereClause;
 $result = $conn->query($sql);
 ?>
@@ -166,7 +166,7 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No records found in FLOMAST table.</p>
+            <p>No records found in flomast table.</p>
         <?php endif; ?>
     </div>
 

@@ -16,7 +16,7 @@ if ($flosno) {
                             f.FLOAREASNO,
                             a.AREANAME,
                             f.FLOACTFLG
-                          FROM FLOMAST f
+                          FROM flomast f
                           LEFT JOIN areamast a ON f.FLOAREASNO = a.AREASNO
                           WHERE f.FLOSNO = ?");
     $stmt->bind_param("i", $flosno);
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     if (empty($floname) || empty($flocode)) {
         $message = "<div class='error'>Field officer name and code are required!</div>";
     } else {
-        $stmt = $conn->prepare("UPDATE FLOMAST SET 
+        $stmt = $conn->prepare("UPDATE flomast SET 
                               FLONAME = ?, 
                               FLOCODE = ?, 
                               FLOTEL = ?, 
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                                     f.FLOAREASNO,
                                     a.AREANAME,
                                     f.FLOACTFLG
-                                  FROM FLOMAST f
+                                  FROM flomast f
                                   LEFT JOIN areamast a ON f.FLOAREASNO = a.AREASNO
                                   WHERE f.FLOSNO = ?");
             $stmt->bind_param("i", $flosno);

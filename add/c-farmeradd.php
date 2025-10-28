@@ -9,10 +9,10 @@ $current_user = $user_query->fetch_assoc();
 $assigned_flosno = $current_user['USRFLOSNO'] ?? null;
 $user_role = $_SESSION['role'];  // Get the current user's role (admin or not)
 
-// Get Field Officer name from FLOMAST using USRFLONO for non-admin users
+// Get Field Officer name from flomast using USRFLONO for non-admin users
 $field_officer_name = '';
 if ($assigned_flosno && $user_role !== 'admin') {
-    $flo_query = $conn->query("SELECT FLONAME FROM FLOMAST WHERE FLOSNO = $assigned_flosno");
+    $flo_query = $conn->query("SELECT FLONAME FROM flomast WHERE FLOSNO = $assigned_flosno");
     if ($flo_query && $flo_query->num_rows > 0) {
         $field_data = $flo_query->fetch_assoc();
         $field_officer_name = $field_data['FLONAME'];
@@ -83,7 +83,7 @@ if ($result && $result->num_rows > 0) {
 // Fetch Field Officers for dropdown (only if admin)
 $fieldOfficers = [];
 if ($user_role === 'admin') {
-    $sql = "SELECT FLOSNO, FLONAME FROM FLOMAST ORDER BY FLONAME";
+    $sql = "SELECT FLOSNO, FLONAME FROM flomast ORDER BY FLONAME";
     $result = $conn->query($sql);
     if ($result && $result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {

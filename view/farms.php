@@ -29,7 +29,7 @@ $sql = "SELECT
             f.FARACTFLG,
             fl.FLONAME AS FieldOfficerName
         FROM farma f
-        LEFT JOIN FLOMAST fl ON f.FARFLOSNO = fl.FLOSNO
+        LEFT JOIN flomast fl ON f.FARFLOSNO = fl.FLOSNO
         $whereClause";
 
 $result = $conn->query($sql);

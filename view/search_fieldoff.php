@@ -7,7 +7,7 @@ if (isset($_GET['term'])) {
     $term = $conn->real_escape_string($_GET['term']);
     
     // Search by Field Officer Name (FLONAME) with case-insensitive matching
-    $sql = "SELECT DISTINCT FLONAME FROM FLOMAST 
+    $sql = "SELECT DISTINCT FLONAME FROM flomast 
             WHERE FLONAME LIKE '%$term%' 
             ORDER BY FLONAME 
             LIMIT 10";

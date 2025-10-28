@@ -21,7 +21,7 @@ if ($areaResult) {
 
 // Fetch existing field officer names for autocomplete
 $fieldOfficerNames = [];
-$nameQuery = "SELECT FLONAME FROM FLOMAST ORDER BY FLONAME";
+$nameQuery = "SELECT FLONAME FROM flomast ORDER BY FLONAME";
 $nameResult = $conn->query($nameQuery);
 if ($nameResult && $nameResult->num_rows > 0) {
     while ($row = $nameResult->fetch_assoc()) {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $floaddip = gethostbyname(gethostname());
 
     // Check if officer code already exists using prepared statement
-    $checkSql = "SELECT * FROM FLOMAST WHERE FLOCODE = ?";
+    $checkSql = "SELECT * FROM flomast WHERE FLOCODE = ?";
     $stmt = $conn->prepare($checkSql);
     $stmt->bind_param("s", $flocode);
     $stmt->execute();
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<script>alert('Error: Field Officer code already taken.');</script>";
     } else {
         // Insert data into the database using prepared statement
-        $sql = "INSERT INTO FLOMAST (FLONAME, FLOCODE, FLOTEL, FLOAREASNO, FLOADDUSER, FLOADDIP) 
+        $sql = "INSERT INTO flomast (FLONAME, FLOCODE, FLOTEL, FLOAREASNO, FLOADDUSER, FLOADDIP) 
                 VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssiss", $floname, $flocode, $flotel, $floareasno, $floadduser, $floaddip);

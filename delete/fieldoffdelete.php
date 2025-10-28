@@ -5,8 +5,8 @@ require_once '../includes/connect.php';
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $officerId = $conn->real_escape_string($_GET['id']);
 
-    // Delete query for FLOMAST table
-    $sql = "DELETE FROM FLOMAST WHERE FLOSNO = '$officerId'";
+    // Delete query for flomast table
+    $sql = "DELETE FROM flomast WHERE FLOSNO = '$officerId'";
     
     if ($conn->query($sql) === TRUE) {
         echo "<script>
