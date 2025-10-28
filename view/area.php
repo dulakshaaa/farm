@@ -19,7 +19,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $whereClause = " WHERE a.AREANAME LIKE '%$search%' OR a.AREACODE LIKE '%$search%'";
 }
 
-// Modified query to join with AREAMAST table
+// Modified query to join with areamast table
 $sql = "SELECT 
             a.AREASNO,
             a.AREANAME,
@@ -37,7 +37,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/view.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>AREAMAST Data View</title>
+    <title>areamast Data View</title>
     <style>
         h1 {
             color: #2c3e50;
@@ -156,7 +156,7 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No records found in AREAMAST table.</p>
+            <p>No records found in areamast table.</p>
         <?php endif; ?>
     </div>
 

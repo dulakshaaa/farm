@@ -5,8 +5,8 @@ require_once '../includes/connect.php';
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $areaId = $conn->real_escape_string($_GET['id']);
 
-    // Delete query for AREAMAST table
-    $sql = "DELETE FROM AREAMAST WHERE AREASNO = '$areaId'";
+    // Delete query for areamast table
+    $sql = "DELETE FROM areamast WHERE AREASNO = '$areaId'";
     
     if ($conn->query($sql) === TRUE) {
         echo "<script>
