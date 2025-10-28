@@ -17,8 +17,8 @@ if ($batcode) {
                             br.BRDNAME,
                             b.BATCHICKS, 
                             b.BATACTFLG 
-                          FROM BATMAST b
-                          LEFT JOIN FARMA f ON b.BATFARSNO = f.FARSNO
+                          FROM batmast b
+                          LEFT JOIN farma f ON b.BATFARSNO = f.FARSNO
                           LEFT JOIN breedmast br ON b.BATBREEDSNO = br.BRDSNO
                           WHERE b.BATCODE = ?");
     $stmt->bind_param("s", $batcode);
@@ -28,7 +28,7 @@ if ($batcode) {
     $stmt->close();
 
     // Fetch all farms for dropdown
-    $farms = $conn->query("SELECT FARSNO, FARNAME FROM FARMA");
+    $farms = $conn->query("SELECT FARSNO, FARNAME FROM farma");
     // Fetch all breeds for dropdown
     $breeds = $conn->query("SELECT BRDSNO, BRDNAME FROM breedmast");
 }
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     $current_date = date('Y-m-d');
     $current_time = date('H:i:s');
 
-    $stmt = $conn->prepare("UPDATE BATMAST SET 
+    $stmt = $conn->prepare("UPDATE batmast SET 
                           BATFARSNO = ?, 
                           BATDDT = ?, 
                           BATBREEDSNO = ?, 
@@ -82,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                                 br.BRDNAME,
                                 b.BATCHICKS, 
                                 b.BATACTFLG 
-                              FROM BATMAST b
-                              LEFT JOIN FARMA f ON b.BATFARSNO = f.FARSNO
+                              FROM batmast b
+                              LEFT JOIN farma f ON b.BATFARSNO = f.FARSNO
                               LEFT JOIN breedmast br ON b.BATBREEDSNO = br.BRDSNO
                               WHERE b.BATCODE = ?");
         $stmt->bind_param("s", $batcode);

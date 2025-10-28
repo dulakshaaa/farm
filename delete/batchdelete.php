@@ -6,7 +6,7 @@ if (isset($_GET['batcode']) && !empty($_GET['batcode'])) {
     $batcode = $conn->real_escape_string($_GET['batcode']);
 
     // Delete query
-    $sql = "DELETE FROM BATMAST WHERE BATCODE = '$batcode'";
+    $sql = "DELETE FROM batmast WHERE BATCODE = '$batcode'";
     
     if ($conn->query($sql) === TRUE) {
         echo "<script>alert('Record deleted successfully'); window.location.href='../view/batches.php';</script>";

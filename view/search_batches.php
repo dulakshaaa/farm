@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 if (isset($_GET['term'])) {
     $term = $conn->real_escape_string($_GET['term']);
     
-    $sql = "SELECT DISTINCT BATCODE FROM BATMAST WHERE BATCODE LIKE '%$term%' LIMIT 10";
+    $sql = "SELECT DISTINCT BATCODE FROM batmast WHERE BATCODE LIKE '%$term%' LIMIT 10";
     $result = $conn->query($sql);
     
     $batches = array();

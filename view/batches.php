@@ -19,7 +19,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $whereClause = " WHERE b.BATCODE LIKE '%$search%'";
 }
 
-// Modified query to join with breedmast and FARMAST tables
+// Modified query to join with breedmast and farmaST tables
 $sql = "SELECT 
             b.BATCODE,
             f.FARNAME,
@@ -29,8 +29,8 @@ $sql = "SELECT
             b.BATACTFLG,
             b.BATFARSNO,
             b.BATBREEDSNO
-        FROM BATMAST b
-        LEFT JOIN FARMA f ON b.BATFARSNO = f.FARSNO
+        FROM batmast b
+        LEFT JOIN farma f ON b.BATFARSNO = f.FARSNO
         LEFT JOIN breedmast br ON b.BATBREEDSNO = br.BRDSNO" . $whereClause;
 $result = $conn->query($sql);
 ?>
@@ -43,7 +43,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/view.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>BATMAST Data View</title>
+    <title>batmast Data View</title>
     <style>
         h1 {
             color: #2c3e50;
@@ -165,7 +165,7 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No records found in BATMAST table.</p>
+            <p>No records found in batmast table.</p>
         <?php endif; ?>
     </div>
 

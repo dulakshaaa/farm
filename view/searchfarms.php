@@ -7,7 +7,7 @@ if (isset($_GET['term'])) {
     $term = $conn->real_escape_string($_GET['term']);
     
     // Query to search farm name and code
-    $sql = "SELECT DISTINCT FARNAME, FARCODE FROM FARMA WHERE FARNAME LIKE '%$term%' OR FARCODE LIKE '%$term%' LIMIT 10";
+    $sql = "SELECT DISTINCT FARNAME, FARCODE FROM farma WHERE FARNAME LIKE '%$term%' OR FARCODE LIKE '%$term%' LIMIT 10";
     $result = $conn->query($sql);
     
     $farms = array();

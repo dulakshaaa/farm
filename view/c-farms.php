@@ -18,7 +18,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $whereClause = " WHERE f.FARNAME LIKE '%$search%' OR f.FARCODE LIKE '%$search%'";
 }
 
-// Modified query to join with FARMA table
+// Modified query to join with farma table
 $sql = "SELECT 
             f.FARSNO,
             f.FARNAME,
@@ -27,7 +27,7 @@ $sql = "SELECT
             f.FARTEL,
             f.FARPHOTO,
             f.FARACTFLG
-        FROM FARMA f" . $whereClause;
+        FROM farma f" . $whereClause;
 $result = $conn->query($sql);
 ?>
 
@@ -40,7 +40,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/view.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>FARMA Data View</title>
+    <title>farma Data View</title>
     <style>
         h1 {
             color: #2c3e50;
@@ -182,7 +182,7 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No records found in FARMA table.</p>
+            <p>No records found in farma table.</p>
         <?php endif; ?>
     </div>
 

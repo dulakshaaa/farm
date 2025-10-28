@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Check farm code uniqueness
-    $checkSql = "SELECT * FROM FARMA WHERE FARCODE = ?";
+    $checkSql = "SELECT * FROM farma WHERE FARCODE = ?";
     $stmt = $conn->prepare($checkSql);
     $stmt->bind_param("s", $farcode);
     $stmt->execute();
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($result->num_rows > 0) {
         echo "<script>alert('Error: Farm code already taken.');</script>";
     } else {
-        $sql = "INSERT INTO FARMA (FARNAME, FARCODE, FARADDRESS, FARTEL, FARPHOTO, FARADDUSER, FARADDIP, FARFLOSNO, FARAREASNO) 
+        $sql = "INSERT INTO farma (FARNAME, FARCODE, FARADDRESS, FARTEL, FARPHOTO, FARADDUSER, FARADDIP, FARFLOSNO, FARAREASNO) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("sssssssii", $farname, $farcode, $faraddress, $fartel, $farphoto, $faradduser, $faraddip, $fieldOfficerId, $areaId);
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // Fetch existing farm names for autocomplete
 $farmNames = [];
-$sql = "SELECT FARNAME FROM FARMA ORDER BY FARNAME";
+$sql = "SELECT FARNAME FROM farma ORDER BY FARNAME";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {

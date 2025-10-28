@@ -16,7 +16,7 @@ if ($farsno) {
                             f.FARTEL, 
                             f.FARPHOTO, 
                             f.FARACTFLG
-                          FROM FARMA f
+                          FROM farma f
                           WHERE f.FARSNO = ?");
     $stmt->bind_param("i", $farsno);
     $stmt->execute();
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
             $newPhoto = basename($photo["name"]);
         }
 
-        $stmt = $conn->prepare("UPDATE FARMA SET 
+        $stmt = $conn->prepare("UPDATE farma SET 
                               FARNAME = ?, 
                               FARCODE = ?, 
                               FARADDRESS = ?, 
@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                                     f.FARTEL, 
                                     f.FARPHOTO, 
                                     f.FARACTFLG
-                                  FROM FARMA f
+                                  FROM farma f
                                   WHERE f.FARSNO = ?");
             $stmt->bind_param("i", $farsno);
             $stmt->execute();

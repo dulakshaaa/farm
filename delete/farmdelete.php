@@ -7,7 +7,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
     $farsno = $conn->real_escape_string($_GET['id']);
     
     // Delete query
-    $sql = "DELETE FROM FARMA WHERE FARSNO = '$farsno'";
+    $sql = "DELETE FROM farma WHERE FARSNO = '$farsno'";
 
     // Execute the query and check if successful
     if ($conn->query($sql) === TRUE) {
