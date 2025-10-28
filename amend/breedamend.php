@@ -13,7 +13,7 @@ if ($brdsno) {
                             b.BRDNAME,
                             b.BRDCODE,
                             b.BRDACTFLG
-                          FROM BREEDMAST b
+                          FROM breedmast b
                           WHERE b.BRDSNO = ?");
     $stmt->bind_param("i", $brdsno);
     $stmt->execute();
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
     if (empty($brdname) || empty($brdcode)) {
         $message = "<div class='error'>Breed name and code are required!</div>";
     } else {
-        $stmt = $conn->prepare("UPDATE BREEDMAST SET 
+        $stmt = $conn->prepare("UPDATE breedmast SET 
                               BRDNAME = ?, 
                               BRDCODE = ?, 
                               BRDACTFLG = ?,
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update'])) {
                                     b.BRDCODE,
                                     b.BRDACTFLG
                                     
-                                  FROM BREEDMAST b
+                                  FROM breedmast b
                                   WHERE b.BRDSNO = ?");
             $stmt->bind_param("i", $brdsno);
             $stmt->execute();

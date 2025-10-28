@@ -18,13 +18,13 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $whereClause = " WHERE b.BRDNAME LIKE '%$search%' OR b.BRDCODE LIKE '%$search%'";
 }
 
-// Modified query to join with BREEDMAST table
+// Modified query to join with breedmast table
 $sql = "SELECT 
             b.BRDSNO,
             b.BRDNAME,
             b.BRDCODE,
             b.BRDACTFLG
-        FROM BREEDMAST b" . $whereClause;
+        FROM breedmast b" . $whereClause;
 $result = $conn->query($sql);
 ?>
 
@@ -36,7 +36,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="../css/view.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <title>BREEDMAST Data View</title>
+    <title>breedmast Data View</title>
     <style>
         h1 {
             color: #2c3e50;
@@ -154,7 +154,7 @@ $result = $conn->query($sql);
                 </tbody>
             </table>
         <?php else: ?>
-            <p>No records found in BREEDMAST table.</p>
+            <p>No records found in breedmast table.</p>
         <?php endif; ?>
     </div>
 

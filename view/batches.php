@@ -19,7 +19,7 @@ if (isset($_GET['search']) && !empty($_GET['search'])) {
     $whereClause = " WHERE b.BATCODE LIKE '%$search%'";
 }
 
-// Modified query to join with BREEDMAST and FARMAST tables
+// Modified query to join with breedmast and FARMAST tables
 $sql = "SELECT 
             b.BATCODE,
             f.FARNAME,
@@ -31,7 +31,7 @@ $sql = "SELECT
             b.BATBREEDSNO
         FROM BATMAST b
         LEFT JOIN FARMA f ON b.BATFARSNO = f.FARSNO
-        LEFT JOIN BREEDMAST br ON b.BATBREEDSNO = br.BRDSNO" . $whereClause;
+        LEFT JOIN breedmast br ON b.BATBREEDSNO = br.BRDSNO" . $whereClause;
 $result = $conn->query($sql);
 ?>
 

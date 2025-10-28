@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 if (isset($_GET['term'])) {
     $term = $conn->real_escape_string($_GET['term']);
     
-    $sql = "SELECT DISTINCT BRDCODE FROM BREEDMAST WHERE BRDCODE LIKE '%$term%' LIMIT 10";
+    $sql = "SELECT DISTINCT BRDCODE FROM breedmast WHERE BRDCODE LIKE '%$term%' LIMIT 10";
     $result = $conn->query($sql);
     
     $breeds = array();
